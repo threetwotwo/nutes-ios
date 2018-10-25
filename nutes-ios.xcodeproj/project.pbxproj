@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
 		4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89725217F46DA004D6388 /* AppDelegate.swift */; };
 		4EB8972B217F46DA004D6388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89729217F46DA004D6388 /* Main.storyboard */; };
 		4EB8972D217F46DB004D6388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EB8972C217F46DB004D6388 /* Assets.xcassets */; };
@@ -23,10 +24,12 @@
 		4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975A217F4B64004D6388 /* DetailViewController.swift */; };
 		4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975C217F4BB6004D6388 /* EditViewController.swift */; };
 		4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975E217F545D004D6388 /* FeedViewController.swift */; };
+		4EB89761217F602C004D6388 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89760217F602C004D6388 /* GoogleService-Info.plist */; };
 		7445740BE09F8749FBA93579 /* Pods_nutes_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		4EB89722217F46DA004D6388 /* nutes-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nutes-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB89725217F46DA004D6388 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EB8972A217F46DA004D6388 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -45,6 +48,7 @@
 		4EB8975A217F4B64004D6388 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		4EB8975C217F4BB6004D6388 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		4EB8975E217F545D004D6388 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		4EB89760217F602C004D6388 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nutes_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC46993C00C0D776F0BBF7E4 /* Pods-nutes-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nutes-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-nutes-ios/Pods-nutes-ios.release.xcconfig"; sourceTree = "<group>"; };
 		F3F17FCBADE594F533508D59 /* Pods-nutes-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nutes-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-nutes-ios/Pods-nutes-ios.debug.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 				4EB8972C217F46DB004D6388 /* Assets.xcassets */,
 				4EB8972E217F46DB004D6388 /* LaunchScreen.storyboard */,
 				4EB89731217F46DB004D6388 /* Info.plist */,
+				4EB89760217F602C004D6388 /* GoogleService-Info.plist */,
 			);
 			path = "nutes-ios";
 			sourceTree = "<group>";
@@ -116,6 +121,7 @@
 		4EB89743217F4938004D6388 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4E979CFD21807FCF009A3DAC /* SignupViewController.swift */,
 				4EB8975E217F545D004D6388 /* FeedViewController.swift */,
 				4EB8975C217F4BB6004D6388 /* EditViewController.swift */,
 				4EB8973E217F48BD004D6388 /* UserProfileViewController.swift */,
@@ -214,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EB89730217F46DB004D6388 /* LaunchScreen.storyboard in Resources */,
+				4EB89761217F602C004D6388 /* GoogleService-Info.plist in Resources */,
 				4EB8972D217F46DB004D6388 /* Assets.xcassets in Resources */,
 				4EB8972B217F46DA004D6388 /* Main.storyboard in Resources */,
 			);
@@ -229,15 +236,21 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-nutes-ios/Pods-nutes-ios-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/IGListKit/IGListKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IGListKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -269,6 +282,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */,
 				4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */,
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
 				4EB8973F217F48BD004D6388 /* UserProfileViewController.swift in Sources */,

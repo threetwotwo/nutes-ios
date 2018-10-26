@@ -63,6 +63,16 @@ class EditViewController: UIViewController, UITextViewDelegate {
 	}
 
 	//MARK: - Life Cycle
+	fileprivate func showKeyboard(_ notification: (Notification)) {
+		UIView.animate(withDuration: 0.3) {
+			self.hideKeyboardButton.isHidden = false
+			self.doneButtonBottomConstraint.constant = 64
+			let frame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+			self.keyboardViewHeight.constant = frame.height
+			self.view.layoutIfNeeded()
+		}
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -71,10 +81,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
 			// Any code you put in here will be called when the keyboard is about to display
 			print("Show keyboard!")
-			self.showKeyboard()
-			let frame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-
-			self.keyboardViewHeight.constant = frame.height
+			self.showKeyboard(notification)
 		}
 
 		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
@@ -94,15 +101,17 @@ class EditViewController: UIViewController, UITextViewDelegate {
 	}
 
 	fileprivate func showKeyboard() {
-		UIView.animate(withDuration: 0.3) {
-			self.hideKeyboardButton.isHidden = false
-			self.doneButtonBottomConstraint.constant = 64
-			self.view.layoutIfNeeded()
-		}
+//		UIView.animate(withDuration: 0.3) {
+//			self.hideKeyboardButton.isHidden = false
+//			self.doneButtonBottomConstraint.constant = 64
+//			let frame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+//			self.keyboardViewHeight.constant = frame.height
+//			self.view.layoutIfNeeded()
+//		}
 	}
 
 	func textViewDidBeginEditing(_ textView: UITextView) {
-		showKeyboard()
+		print(Notification(name: UIResponder.keyboardWillShowNotification))
 	}
 }
 

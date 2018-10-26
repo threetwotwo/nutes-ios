@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class FeedViewController: UIViewController {
 
@@ -26,6 +27,7 @@ class FeedViewController: UIViewController {
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		let user = Auth.auth().currentUser
 		title = user?.email
+		let db = Database.database().reference()
     }
 
 }

@@ -7,17 +7,25 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class FeedViewController: UIViewController {
 
 	@IBAction func logout(_ sender: Any) {
-		self.dismiss(animated: true)
+		do {
+			try Auth.auth().signOut()
+			print("User logged out!")
+			self.dismiss(animated: true)
+		} catch {
+			print("Unable to logout")
+		}
 	}
 
 	override func viewDidLoad() {
         super.viewDidLoad()
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
-        // Do any additional setup after loading the view.
+		let user = Auth.auth().currentUser
+		title = user?.email
     }
 
 }

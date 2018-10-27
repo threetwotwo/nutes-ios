@@ -28,12 +28,15 @@ class EditViewController: UIViewController, UITextViewDelegate {
 		self.dismiss(animated: true, completion: nil)
 	}
 
-	fileprivate func hideKeyboard() {
-		UIView.animate(withDuration: 0.3) {
+	fileprivate func hideKeyboard(completion: ((Bool)->())? = nil) {
+
+		UIView.animate(withDuration: 0.3, animations: {
 			self.hideKeyboardButton.isHidden = true
 			self.doneButtonBottomConstraint.constant = 16
+			self.keyboardViewHeight.constant = 0
+			self.textLabel.resignFirstResponder()
 			self.view.layoutIfNeeded()
-		}
+		}, completion: completion)
 	}
 
 	@IBAction func hideKeyboardButtonTapped(_ sender: UIButton) {
@@ -43,22 +46,22 @@ class EditViewController: UIViewController, UITextViewDelegate {
 	}
 
 	@IBAction func doneButtonTapped(_ sender: UIButton) {
-		textLabel.resignFirstResponder()
-		view.layoutIfNeeded()
-		guard let text = textLabel.text,
-			text.count > 0 else {return}
-		let renderer = UIGraphicsImageRenderer(size: imageView.bounds.size)
-		let image = renderer.image { ctx in
-			imageView.drawHierarchy(in: imageView.bounds, afterScreenUpdates: true)
-		}
-		let imageData = image.jpegData(compressionQuality: 1)
+		hideKeyboard { (_) in
+			guard let text = self.textLabel.text,
+				text.count > 0 else {return}
+			let renderer = UIGraphicsImageRenderer(size: self.imageView.bounds.size)
+			let image = renderer.image { ctx in
+				self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
+			}
+			let imageData = image.jpegData(compressionQuality: 1)
 
-		let post = Post()
-		post.username = "elonofficial"
-		post.image = imageData
-		let realm = try! Realm()
-		try! realm.write {
-			realm.add(post)
+			let post = Post()
+			post.username = "elonofficial"
+			post.image = imageData
+			let realm = try! Realm()
+			try! realm.write {
+				realm.add(post)
+			}
 		}
 	}
 
@@ -86,7 +89,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 
 		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
 			// Any code you put in here will be called when the keyboard is about to hide
-			self.keyboardViewHeight.constant = 0
+			self.hideKeyboard()
 		}
 
 	}

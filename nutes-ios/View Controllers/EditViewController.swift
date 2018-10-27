@@ -46,21 +46,27 @@ class EditViewController: UIViewController, UITextViewDelegate {
 	}
 
 	@IBAction func doneButtonTapped(_ sender: UIButton) {
+		guard let text = self.textLabel.text,
+			text.count > 0 else {return}
 		hideKeyboard { (_) in
-			guard let text = self.textLabel.text,
-				text.count > 0 else {return}
-			let renderer = UIGraphicsImageRenderer(size: self.imageView.bounds.size)
-			let image = renderer.image { ctx in
-				self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
-			}
-			let imageData = image.jpegData(compressionQuality: 1)
+			UIGraphicsBeginImageContextWithOptions(self.imageView.bounds.size, self.imageView.isOpaque, 0.0)
 
-			let post = Post()
-			post.username = "elonofficial"
-			post.image = imageData
-			let realm = try! Realm()
-			try! realm.write {
-				realm.add(post)
+//			let renderer = UIGraphicsImageRenderer(size: self.imageView.bounds.size)
+//			let image = renderer.image { ctx in
+//				self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
+//			}
+			self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
+			let image = UIGraphicsGetImageFromCurrentImageContext()
+			UIGraphicsEndImageContext()
+			if let image = image {
+				let imageData = image.jpegData(compressionQuality: 1)
+				let post = Post()
+				post.username = "elonofficial"
+				post.image = imageData
+				let realm = try! Realm()
+				try! realm.write {
+					realm.add(post)
+				}
 			}
 		}
 	}
@@ -87,10 +93,10 @@ class EditViewController: UIViewController, UITextViewDelegate {
 			self.showKeyboard(notification)
 		}
 
-		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
-			// Any code you put in here will be called when the keyboard is about to hide
-			self.hideKeyboard()
-		}
+//		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
+//			// Any code you put in here will be called when the keyboard is about to hide
+//			self.hideKeyboard()
+//		}
 
 	}
 

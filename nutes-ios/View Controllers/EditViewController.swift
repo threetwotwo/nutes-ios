@@ -48,13 +48,10 @@ class EditViewController: UIViewController, UITextViewDelegate {
 	@IBAction func doneButtonTapped(_ sender: UIButton) {
 		guard let text = self.textLabel.text,
 			text.count > 0 else {return}
+		doneButton.isEnabled = false
 		hideKeyboard { (_) in
 			UIGraphicsBeginImageContextWithOptions(self.imageView.bounds.size, self.imageView.isOpaque, 0.0)
 
-//			let renderer = UIGraphicsImageRenderer(size: self.imageView.bounds.size)
-//			let image = renderer.image { ctx in
-//				self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
-//			}
 			self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
 			let image = UIGraphicsGetImageFromCurrentImageContext()
 			UIGraphicsEndImageContext()
@@ -67,6 +64,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 				try! realm.write {
 					realm.add(post)
 				}
+				self.dismiss(animated: true, completion: nil)
 			}
 		}
 	}
@@ -84,6 +82,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		doneButton.isEnabled = true
 
 		textLabel.font = UIFont.systemFont(ofSize: UIScreen.main.bounds.width/13.8, weight: .semibold)
 
@@ -107,16 +106,6 @@ class EditViewController: UIViewController, UITextViewDelegate {
 		textLabel.becomeFirstResponder()
 		print("View did appear")
 
-	}
-
-	fileprivate func showKeyboard() {
-//		UIView.animate(withDuration: 0.3) {
-//			self.hideKeyboardButton.isHidden = false
-//			self.doneButtonBottomConstraint.constant = 64
-//			let frame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-//			self.keyboardViewHeight.constant = frame.height
-//			self.view.layoutIfNeeded()
-//		}
 	}
 
 	func textViewDidBeginEditing(_ textView: UITextView) {

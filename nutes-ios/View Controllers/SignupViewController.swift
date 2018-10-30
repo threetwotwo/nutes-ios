@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseFirestore
 
 class SignupViewController: UIViewController {
 
@@ -24,20 +25,37 @@ class SignupViewController: UIViewController {
 		if isSignupMode {
 			Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { (authResult, error) in
 				guard error == nil else {
-					print(error?.localizedDescription)
+					print(error?.localizedDescription ?? "error in creating user")
 					return
 				}
-				print("\(authResult?.user) registered!")
-
-				self.present(vc, animated: true)
+				// Add a new document with a generated ID
+				let db = Firestore.firestore()
+				let settings = db.settings
+				settings.areTimestampsInSnapshotsEnabled = true
+				db.settings = settings
+				guard let email = authResult?.user.email,
+				let uid = Auth.auth().currentUser?.uid else { return }
+				
+				db.collection("users").document(uid).setData([
+					"email" : email,
+					"timestamp" : String(NSDate().timeIntervalSince1970)
+				]) { err in
+					if let err = err {
+						print("Error adding document: \(err)")
+					} else {
+						print("Document added with ID: \(uid)")
+						self.present(vc, animated: true)
+					}
+				}
+				print("\(String(describing: authResult?.user.email)) registered!")
 			}
 		} else {
 			Auth.auth().signIn(withEmail: emailField.text!, password: passwordField.text!) { (result, error) in
 				guard error == nil else {
-					print(error?.localizedDescription)
+					print(error?.localizedDescription ?? "error in logging in")
 					return
 				}
-				print("\(result?.user.email) logged in!")
+				print("\(String(describing: result?.user.email)) logged in!")
 				self.present(vc, animated: true)
 			}
 		}

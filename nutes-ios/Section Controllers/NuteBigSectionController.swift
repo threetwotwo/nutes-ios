@@ -28,9 +28,8 @@ class NuteBigSectionController: ListSectionController {
 		}
 
 		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "NuteBigCell", for: self, at: index) as! NuteBigCell
-		if let imageData = post.image,
-			let image = UIImage(data: imageData){
-			cell.imageView.image = image
+		if let imageURL = URL(string: post.imageURL!) {
+			cell.imageView.sd_setImage(with: imageURL)
 		}
 		return cell
 	}

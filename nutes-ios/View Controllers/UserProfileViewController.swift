@@ -37,13 +37,10 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		_ = adapter
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		reloadItems()
-
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
-		guard !items.isEmpty else {return}
-		reloadItems()
-
+//		reloadItems()
 	}
 
 	fileprivate func reloadItems() {
@@ -51,7 +48,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		items.append(User(text: "Elon"))
 
 		db = Firestore.firestore()
-		db.collection("posts").whereField("username", isEqualTo: User.username).getDocuments { (documents, error) in
+		db.collection("posts").whereField("username", isEqualTo: User.username).order(by: "timestamp", descending: true).getDocuments { (documents, error) in
 			guard error == nil,
 			let documents = documents?.documents else {
 				print(error?.localizedDescription ?? "Error fetching posts!")

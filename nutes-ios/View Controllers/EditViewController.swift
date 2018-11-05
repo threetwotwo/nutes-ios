@@ -60,9 +60,9 @@ class EditViewController: UIViewController, UITextViewDelegate {
 			if let image = image,
 				let imageData = image.jpegData(compressionQuality: 1) {
 				//Create unique id
-				let timestamp = String(Int(NSDate().timeIntervalSince1970))
+				let timestamp = FieldValue.serverTimestamp()
 				guard let username = User.username else {return}
-				let postID = username + timestamp
+				let postID = "\(username)\(Timestamp.init().seconds)"
 				//Create reference to Cloud Storage
 				let imageRef = Storage.storage().reference().child(postID + ".jpg")
 				print(imageRef)

@@ -8,6 +8,8 @@
 
 import UIKit
 import RealmSwift
+import FirebaseStorage
+import FirebaseFirestore
 
 class EditViewController: UIViewController, UITextViewDelegate {
 
@@ -55,15 +57,50 @@ class EditViewController: UIViewController, UITextViewDelegate {
 			self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
 			let image = UIGraphicsGetImageFromCurrentImageContext()
 			UIGraphicsEndImageContext()
-			if let image = image {
-				let imageData = image.jpegData(compressionQuality: 1)
-				let post = Post()
-				post.username = "elonofficial"
-				post.image = imageData
-				let realm = try! Realm()
-				try! realm.write {
-					realm.add(post)
+			if let image = image,
+				let imageData = image.jpegData(compressionQuality: 1) {
+				//Create unique id
+				let timestamp = String(Int(NSDate().timeIntervalSince1970))
+				guard let username = User.username else {return}
+				let postID = username + timestamp
+				//Create reference to Cloud Storage
+				let imageRef = Storage.storage().reference().child(postID + ".jpg")
+				print(imageRef)
+
+				let uploadTask = imageRef.putData(imageData, metadata: nil) { (metadata, error) in
+					imageRef.downloadURL(completion: { (URL, error) in
+						guard error == nil else {
+							print(error?.localizedDescription)
+							return
+						}
+						if let url = URL?.absoluteString {
+							let db = Firestore.firestore()
+							let settings = db.settings
+							settings.areTimestampsInSnapshotsEnabled = true
+							db.settings = settings
+
+							let docRef = db.collection("posts").document(postID).setData([
+								"username" : username,
+								"imageURL" : url,
+								"timestamp" : timestamp
+							]){
+								error in
+								if let error = error {
+									print("Error adding document: \(error)")
+								} else {
+									print("posts Document added with ID: \(username)")
+								}
+							}
+						}
+					})
 				}
+//				let post = Post()
+//				post.username = "elonofficial"
+//				post.image = imageData
+//				let realm = try! Realm()
+//				try! realm.write {
+//					realm.add(post)
+//				}
 				self.dismiss(animated: true, completion: nil)
 			}
 		}

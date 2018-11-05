@@ -26,7 +26,7 @@ class FeedViewController: UIViewController {
         super.viewDidLoad()
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		let user = Auth.auth().currentUser
-		title = user?.email
+		title = User.username
     }
 
 }

@@ -10,7 +10,7 @@ import Foundation
 import IGListKit
 
 class User {
-
+	static var username: String!
 	let identifier = UUID().uuidString
 	var text: String
 

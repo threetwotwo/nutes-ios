@@ -8,6 +8,7 @@
 
 import Foundation
 import IGListKit
+import SDWebImage
 
 class UserProfileNuteSectionController: ListSectionController {
 
@@ -33,10 +34,10 @@ class UserProfileNuteSectionController: ListSectionController {
 	override func cellForItem(at index: Int) -> UICollectionViewCell {
 		guard let context = collectionContext,
 			let post = post,
-			let imageData = post.image else {
+			let imageURL = URL(string: post.imageURL ?? "") else {
 				return UICollectionViewCell()
 		}
-
+		print(imageURL)
 
 		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "UserProfileNuteCell", for: self, at: index)
 
@@ -44,10 +45,7 @@ class UserProfileNuteSectionController: ListSectionController {
 			return cell
 		}
 
-		if let image = UIImage(data: imageData) {
-			nuteCell.imageView.image = image
-		}
-
+		nuteCell.imageView.sd_setImage(with: imageURL)
 		return nuteCell
 	}
 

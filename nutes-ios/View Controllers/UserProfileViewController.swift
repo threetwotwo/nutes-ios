@@ -9,6 +9,8 @@
 import UIKit
 import IGListKit
 import RealmSwift
+import SDWebImage
+import FirebaseFirestore
 
 class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 
@@ -17,6 +19,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 
 	//MARK: - Variables
 	var items: [ListDiffable] = []
+	var db: Firestore!
 
 	//MARK: - Adapter
 	lazy var adapter: ListAdapter = {
@@ -33,22 +36,37 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		// Do any additional setup after loading the view, typically from a nib.
 		_ = adapter
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
+		reloadItems()
 
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		guard !items.isEmpty else {return}
-		items.removeAll()
-		adapter.reloadData(completion: nil)
+		reloadItems()
+
 	}
 
 	fileprivate func reloadItems() {
+		items.removeAll()
 		items.append(User(text: "Elon"))
-		let realm = try! Realm()
-		let posts = realm.objects(Post.self).sorted(byKeyPath: "timestamp", ascending: false)
-		for post in posts {
-			items.append(post)
+
+		db = Firestore.firestore()
+		db.collection("posts").whereField("username", isEqualTo: User.username).getDocuments { (documents, error) in
+			guard error == nil,
+			let documents = documents?.documents else {
+				print(error?.localizedDescription ?? "Error fetching posts!")
+				return
+			}
+
+			for document in documents {
+				let post = Post()
+				post.imageURL = document.get("imageURL") as? String
+				self.items.append(post)
+			}
+			print(self.items.count)
+			self.adapter.reloadData(completion: nil)
 		}
+
 	}
 
 }
@@ -57,7 +75,6 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 extension UserProfileViewController: ListAdapterDataSource {
 
 	func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-		reloadItems()
 		return items
 	}
 

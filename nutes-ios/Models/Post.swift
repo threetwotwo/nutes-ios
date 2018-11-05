@@ -15,6 +15,7 @@ class Post: Object {
 	@objc dynamic var username = ""
 	@objc dynamic var timestamp = String(NSDate().timeIntervalSince1970)
 	@objc dynamic var image: Data? = nil
+	@objc dynamic var imageURL: String? = nil
 
 }
 

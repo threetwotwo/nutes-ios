@@ -104,6 +104,7 @@ class SignupViewController: UIViewController {
 							return
 						}
 						print("\(username) logged in!")
+						User.username = username
 						self.present(vc, animated: true)
 					}
 				}

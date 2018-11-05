@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 		// Override point for customization after application launch.
 		FirebaseApp.configure()
 		let _ = Firestore.firestore()
-
+		let storage = Storage.storage()
 		let realm = try! Realm()
 		debugPrint("Path to realm file: " + realm.configuration.fileURL!.absoluteString)
 		return true

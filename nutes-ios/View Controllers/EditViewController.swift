@@ -89,21 +89,15 @@ class EditViewController: UIViewController, UITextViewDelegate {
 									print("Error adding document: \(error)")
 								} else {
 									print("posts Document added with ID: \(username)")
+									NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
 								}
 							}
 						}
 					})
 				}
-//				let post = Post()
-//				post.username = "elonofficial"
-//				post.image = imageData
-//				let realm = try! Realm()
-//				try! realm.write {
-//					realm.add(post)
-//				}
-				self.dismiss(animated: true, completion: nil)
 			}
 		}
+		self.dismiss(animated: true, completion: nil)
 	}
 
 	//MARK: - Life Cycle

@@ -37,13 +37,10 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		_ = adapter
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		reloadItems()
+		NotificationCenter.default.addObserver(self, selector: #selector(reloadItems), name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
-//		reloadItems()
-	}
-
-	fileprivate func reloadItems() {
+	@objc fileprivate func reloadItems() {
 		items.removeAll()
 		items.append(User(text: "Elon"))
 

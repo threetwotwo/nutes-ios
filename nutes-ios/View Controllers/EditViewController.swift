@@ -42,8 +42,6 @@ class EditViewController: UIViewController, UITextViewDelegate {
 	}
 
 	@IBAction func hideKeyboardButtonTapped(_ sender: UIButton) {
-		textLabel.resignFirstResponder()
-
 		hideKeyboard()
 	}
 
@@ -111,6 +109,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 
 	//MARK: - Life Cycle
 	fileprivate func showKeyboard(_ notification: (Notification)) {
+
 		UIView.animate(withDuration: 0.3) {
 			self.hideKeyboardButton.isHidden = false
 			self.doneButtonBottomConstraint.constant = 64
@@ -125,6 +124,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 		doneButton.isEnabled = true
 
 		textLabel.font = UIFont.systemFont(ofSize: UIScreen.main.bounds.width/13.8, weight: .semibold)
+		self.textLabel.spellCheckingType = .no
 
 		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
 			// Any code you put in here will be called when the keyboard is about to display

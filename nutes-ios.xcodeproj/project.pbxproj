@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */; };
 		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
 		4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89725217F46DA004D6388 /* AppDelegate.swift */; };
 		4EB8972B217F46DA004D6388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89729217F46DA004D6388 /* Main.storyboard */; };
@@ -25,10 +26,12 @@
 		4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975C217F4BB6004D6388 /* EditViewController.swift */; };
 		4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975E217F545D004D6388 /* FeedViewController.swift */; };
 		4EB89761217F602C004D6388 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89760217F602C004D6388 /* GoogleService-Info.plist */; };
+		4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */; };
 		7445740BE09F8749FBA93579 /* Pods_nutes_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		4EB89722217F46DA004D6388 /* nutes-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nutes-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB89725217F46DA004D6388 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +52,7 @@
 		4EB8975C217F4BB6004D6388 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		4EB8975E217F545D004D6388 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		4EB89760217F602C004D6388 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + IBInspectables.swift"; sourceTree = "<group>"; };
 		803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nutes_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC46993C00C0D776F0BBF7E4 /* Pods-nutes-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nutes-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-nutes-ios/Pods-nutes-ios.release.xcconfig"; sourceTree = "<group>"; };
 		F3F17FCBADE594F533508D59 /* Pods-nutes-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nutes-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-nutes-ios/Pods-nutes-ios.debug.xcconfig"; sourceTree = "<group>"; };
@@ -105,11 +109,13 @@
 			isa = PBXGroup;
 			children = (
 				4EB89725217F46DA004D6388 /* AppDelegate.swift */,
+				4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */,
 				4EB89729217F46DA004D6388 /* Main.storyboard */,
 				4EB89749217F499D004D6388 /* Models */,
 				4EB8974E217F4A6C004D6388 /* Views */,
 				4EB89743217F4938004D6388 /* View Controllers */,
 				4EB89755217F4B0C004D6388 /* Section Controllers */,
+				4ED3CFBE2190444B00F752FF /* Extensions */,
 				4EB8972C217F46DB004D6388 /* Assets.xcassets */,
 				4EB8972E217F46DB004D6388 /* LaunchScreen.storyboard */,
 				4EB89731217F46DB004D6388 /* Info.plist */,
@@ -157,6 +163,14 @@
 				4EB89758217F4B44004D6388 /* NuteBigSectionController.swift */,
 			);
 			path = "Section Controllers";
+			sourceTree = "<group>";
+		};
+		4ED3CFBE2190444B00F752FF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,8 +255,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/IGListKit/IGListKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
-				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
@@ -259,8 +271,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IGListKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
@@ -306,6 +316,7 @@
 				4EB8973F217F48BD004D6388 /* UserProfileViewController.swift in Sources */,
 				4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */,
 				4EB89748217F4995004D6388 /* User.swift in Sources */,
+				4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */,
 				4EB8974B217F49DF004D6388 /* Post.swift in Sources */,
 				4EB89750217F4A84004D6388 /* NuteBigCell.swift in Sources */,
 				4EB89759217F4B44004D6388 /* NuteBigSectionController.swift in Sources */,
@@ -314,6 +325,7 @@
 				4EB89754217F4B00004D6388 /* UserProfileNuteSectionController.swift in Sources */,
 				4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */,
 				4EB8974D217F4A5F004D6388 /* NuteCell.swift in Sources */,
+				4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

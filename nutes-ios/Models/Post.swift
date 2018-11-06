@@ -8,14 +8,13 @@
 
 import Foundation
 import IGListKit
-import RealmSwift
 
-class Post: Object {
+class Post {
 
-	@objc dynamic var username = ""
-	@objc dynamic var timestamp = String(NSDate().timeIntervalSince1970)
-	@objc dynamic var image: Data? = nil
-	@objc dynamic var imageURL: String? = nil
+	var username = ""
+	var timestamp = String(NSDate().timeIntervalSince1970)
+	var image: Data? = nil
+	var imageURL: String? = nil
 
 }
 

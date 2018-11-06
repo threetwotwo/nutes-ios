@@ -6,7 +6,6 @@ target 'nutes-ios' do
   use_frameworks!
 
   # Pods for nutes-ios
-pod 'RealmSwift'
 pod 'IGListKit', '~> 3.0'
 pod 'Firebase/Core'
 pod 'Firebase/Auth'

@@ -16,7 +16,7 @@ class FeedViewController: UIViewController {
 		do {
 			try Auth.auth().signOut()
 			print("User logged out!")
-			self.dismiss(animated: true)
+			self.tabBarController?.dismiss(animated: true, completion: nil)
 		} catch {
 			print("Unable to logout")
 		}
@@ -25,7 +25,6 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
-		let user = Auth.auth().currentUser
 		title = User.username
     }
 

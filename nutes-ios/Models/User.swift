@@ -11,12 +11,9 @@ import IGListKit
 
 class User {
 	static var username: String!
-	let identifier = UUID().uuidString
-	var text: String
-
-	init(text: String) {
-		self.text = text
-	}
+	static var uid: String!
+	var identifier: String = UUID().uuidString
+	var posts: Int! = 0
 
 }
 

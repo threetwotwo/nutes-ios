@@ -10,7 +10,13 @@ import Foundation
 import IGListKit
 
 class UserProfileHeaderSectionController: ListSectionController {
+	var user: User?
 
+	override func didUpdate(to object: Any) {
+		guard let user = object as? User else {return}
+		self.user = user
+	}
+	
 	override func numberOfItems() -> Int {
 		return 1
 	}
@@ -18,10 +24,11 @@ class UserProfileHeaderSectionController: ListSectionController {
 	override func cellForItem(at index: Int) -> UICollectionViewCell {
 		guard let context = collectionContext else { return UICollectionViewCell() }
 		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "UserProfileHeaderCell", for: self, at: index) as! UserProfileCell
-//		let imageHeight = cell.userProfileImage.frame.height
+		let imageHeight = cell.userProfileImage.frame.height
 		//Round the corners
-//		cell.userProfileImage.layer.cornerRadius = imageHeight/2
-//		cell.followButton.layer.cornerRadius = 5
+		cell.userProfileImage.layer.cornerRadius = imageHeight/2
+		//update labels
+		cell.postLabel.text = "\(user?.posts ?? 0)"
 		return cell
 	}
 

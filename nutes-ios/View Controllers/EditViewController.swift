@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import RealmSwift
 import FirebaseStorage
 import FirebaseFirestore
+import FirebaseAuth
 
 class EditViewController: UIViewController, UITextViewDelegate {
 
@@ -70,16 +70,13 @@ class EditViewController: UIViewController, UITextViewDelegate {
 				let uploadTask = imageRef.putData(imageData, metadata: nil) { (metadata, error) in
 					imageRef.downloadURL(completion: { (URL, error) in
 						guard error == nil else {
-							print(error?.localizedDescription)
+							print(error?.localizedDescription ?? "Error uploading")
 							return
 						}
 						if let url = URL?.absoluteString {
-							let db = Firestore.firestore()
-							let settings = db.settings
-							settings.areTimestampsInSnapshotsEnabled = true
-							db.settings = settings
+							let db = FirebaseManager.shared.db
 
-							let docRef = db.collection("posts").document(postID).setData([
+							db!.collection("posts").document(postID).setData([
 								"username" : username,
 								"imageURL" : url,
 								"timestamp" : timestamp
@@ -89,7 +86,19 @@ class EditViewController: UIViewController, UITextViewDelegate {
 									print("Error adding document: \(error)")
 								} else {
 									print("posts Document added with ID: \(username)")
+									//notifies the app that a post has been uploaded to cloud storage
 									NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
+									//increment user's post count
+									guard let userID = Auth.auth().currentUser?.uid else {return}
+									let user = db!.collection("users").document(userID)
+									user.getDocument { (document, error) in
+										if let document = document, document.exists,
+										let postCount = document.get("posts") as? Int{
+											user.updateData(["posts" : postCount + 1])
+										} else {
+											print("Document does not exist")
+										}
+									}
 								}
 							}
 						}

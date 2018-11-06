@@ -81,16 +81,21 @@ class SignupViewController: UIViewController {
 				self.db.collection("users").document(uid).setData([
 					"email" : email,
 					"username" : username,
-					"timestamp" : String(NSDate().timeIntervalSince1970)
+					"timestamp" : FieldValue.serverTimestamp(),
+					"posts" : 0,
+					"followers" : 0,
+					"following" : 0
 				]) { error in
 					if let error = error {
 						print("Error adding document: \(error)")
 					} else {
 						print("user Document added with ID: \(uid)")
-						self.present(vc, animated: true)
 					}
 				}
 				print("\(String(describing: authResult?.user.email)) registered!")
+				User.username = username
+				User.uid = Auth.auth().currentUser?.uid
+				self.present(vc, animated: true)
 			}
 		} else {
 			let docRef = self.db.collection("usernames").document(username)
@@ -105,6 +110,7 @@ class SignupViewController: UIViewController {
 						}
 						print("\(username) logged in!")
 						User.username = username
+						User.uid = Auth.auth().currentUser?.uid
 						self.present(vc, animated: true)
 					}
 				}
@@ -118,7 +124,7 @@ class SignupViewController: UIViewController {
 		updateButtons()
 	}
 
-	//MARK: - variables
+	//MARK: - variablesr
 	var db: Firestore!
 	var isSignupMode = true
 	var usernameTaken = true
@@ -135,10 +141,7 @@ class SignupViewController: UIViewController {
 		updateButtons()
 		usernameMessageLabel.text = ""
 		usernameField.delegate = self
-		db = Firestore.firestore()
-		let settings = db.settings
-		settings.areTimestampsInSnapshotsEnabled = true
-		db.settings = settings
+		db = FirebaseManager.shared.db
     }
 
 	override func viewWillAppear(_ animated: Bool) {

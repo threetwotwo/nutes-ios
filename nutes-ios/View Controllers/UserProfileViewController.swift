@@ -8,9 +8,9 @@
 
 import UIKit
 import IGListKit
-import RealmSwift
 import SDWebImage
 import FirebaseFirestore
+import FirebaseAuth
 
 class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 
@@ -20,6 +20,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 	//MARK: - Variables
 	var items: [ListDiffable] = []
 	var db: Firestore!
+	var user = User()
 
 	//MARK: - Adapter
 	lazy var adapter: ListAdapter = {
@@ -36,31 +37,30 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		// Do any additional setup after loading the view, typically from a nib.
 		_ = adapter
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
+		db = FirebaseManager.shared.db
+		if let uid = Auth.auth().currentUser?.uid {
+			db.collection("users").document(uid).getDocument { (document, error) in
+				if let document = document, document.exists,
+					let postCount = document.get("posts") as? Int{
+					self.user.posts = postCount
+				} else {
+					print("Document does not exist")
+				}
+			}
+		}
 		reloadItems()
 		NotificationCenter.default.addObserver(self, selector: #selector(reloadItems), name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
 	}
 
 	@objc fileprivate func reloadItems() {
 		items.removeAll()
-		items.append(User(text: "Elon"))
+		items.append(user)
 
-		db = Firestore.firestore()
-		db.collection("posts").whereField("username", isEqualTo: User.username).order(by: "timestamp", descending: true).getDocuments { (documents, error) in
-			guard error == nil,
-			let documents = documents?.documents else {
-				print(error?.localizedDescription ?? "Error fetching posts!")
-				return
-			}
-
-			for document in documents {
-				let post = Post()
-				post.imageURL = document.get("imageURL") as? String
-				self.items.append(post)
-			}
-			print(self.items.count)
-			self.adapter.reloadData(completion: nil)
+		FirebaseManager.shared.getPostsForUser(username: User.username) { (posts) in
+			guard let posts = posts else {return}
+			self.items.append(contentsOf: posts)
+			self.adapter.reloadData()
 		}
-
 	}
 
 }

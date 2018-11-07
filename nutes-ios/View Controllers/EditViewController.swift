@@ -59,7 +59,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 				let imageData = image.jpegData(compressionQuality: 1) {
 				//Create unique id
 				let timestamp = FieldValue.serverTimestamp()
-				guard let username = User.username else {return}
+				guard let username = FirestoreManager.shared.username else {return}
 				let postID = "\(username)\(Timestamp.init().seconds)"
 				//Create reference to Cloud Storage
 				let imageRef = Storage.storage().reference().child(postID + ".jpg")
@@ -72,7 +72,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 							return
 						}
 						if let url = URL?.absoluteString {
-							let db = FirebaseManager.shared.db
+							let db = FirestoreManager.shared.db
 
 							db!.collection("posts").document(postID).setData([
 								"username" : username,

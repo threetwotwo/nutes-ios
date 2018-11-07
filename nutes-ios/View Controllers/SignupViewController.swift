@@ -52,68 +52,21 @@ class SignupViewController: UIViewController {
 	@IBAction func signupButtonPressed(_ sender: Any) {
 
 		guard usernameField.text != "",
-		let username = usernameField.text else {return}
+		let email = emailField.text,
+		let username = usernameField.text,
+		let password = passwordField.text else {return}
 
 		let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainscreen") as! UITabBarController
 
 		if isSignupMode {
-			Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { (authResult, error) in
-				guard error == nil else {
-					print(error?.localizedDescription ?? "error in creating user")
-					return
-				}
-				// Add a new document with a generated ID
-				guard let email = authResult?.user.email,
-					let uid = Auth.auth().currentUser?.uid else { return }
-
-				self.db.collection("usernames").document(username).setData([
-					"user" : uid,
-					"email" : email
-				]) {
-					error in
-					if let error = error {
-						print("Error adding document: \(error)")
-					} else {
-						print("username Document added with ID: \(username)")
-					}
-				}
-
-				self.db.collection("users").document(uid).setData([
-					"email" : email,
-					"username" : username,
-					"timestamp" : FieldValue.serverTimestamp(),
-					"posts" : 0,
-					"followers" : 0,
-					"following" : 0
-				]) { error in
-					if let error = error {
-						print("Error adding document: \(error)")
-					} else {
-						print("user Document added with ID: \(uid)")
-					}
-				}
-				print("\(String(describing: authResult?.user.email)) registered!")
-				User.username = username
-				User.uid = Auth.auth().currentUser?.uid
+			firestore.createUser(withEmail: email, username: username, password: password) {
+				print("\(email) registered!")
 				self.present(vc, animated: true)
 			}
 		} else {
-			let docRef = self.db.collection("usernames").document(username)
-			docRef.getDocument { (document, error) in
-				guard error == nil else {return}
-				if let document = document, document.exists  {
-					guard let email = document.get("email") as? String else {return}
-					Auth.auth().signIn(withEmail: email, password: self.passwordField.text!) { (result, error) in
-						guard error == nil else {
-							print(error?.localizedDescription ?? "error in logging in")
-							return
-						}
-						print("\(username) logged in!")
-						User.username = username
-						User.uid = Auth.auth().currentUser?.uid
-						self.present(vc, animated: true)
-					}
-				}
+			firestore.signIn(forUsername: username, password: password) {
+				print("\(username) logged in!")
+				self.present(vc, animated: true)
 			}
 		}
 	}
@@ -124,8 +77,9 @@ class SignupViewController: UIViewController {
 		updateButtons()
 	}
 
-	//MARK: - variablesr
+	//MARK: - variables
 	var db: Firestore!
+	var firestore = FirestoreManager.shared
 	var isSignupMode = true
 	var usernameTaken = true
 
@@ -141,7 +95,7 @@ class SignupViewController: UIViewController {
 		updateButtons()
 		usernameMessageLabel.text = ""
 		usernameField.delegate = self
-		db = FirebaseManager.shared.db
+		db = FirestoreManager.shared.db
     }
 
 	override func viewWillAppear(_ animated: Bool) {

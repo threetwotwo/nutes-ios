@@ -25,7 +25,7 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
-		title = User.username
+		title = FirestoreManager.shared.username
     }
 
 }

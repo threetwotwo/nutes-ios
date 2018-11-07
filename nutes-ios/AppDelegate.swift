@@ -29,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 		// Override point for customization after application launch.
 		FirebaseApp.configure()
 
-		FirebaseManager.shared.db = Firestore.firestore()
-		FirebaseManager.shared.configureDB()
+		FirestoreManager.shared.db = Firestore.firestore()
+		FirestoreManager.shared.configureDB()
 		return true
 	}
 

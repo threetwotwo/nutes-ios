@@ -20,6 +20,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 	//MARK: - Variables
 	var items: [ListDiffable] = []
 	var db: Firestore!
+	var firestore = FirestoreManager.shared
 	var user = User()
 
 	//MARK: - Adapter
@@ -37,7 +38,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		// Do any additional setup after loading the view, typically from a nib.
 		_ = adapter
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
-		db = FirebaseManager.shared.db
+		db = FirestoreManager.shared.db
 		if let uid = Auth.auth().currentUser?.uid {
 			db.collection("users").document(uid).getDocument { (document, error) in
 				if let document = document, document.exists,
@@ -56,7 +57,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		items.removeAll()
 		items.append(user)
 
-		FirebaseManager.shared.getPostsForUser(username: User.username) { (posts) in
+		firestore.getPostsForUser(username: firestore.username) { (posts) in
 			guard let posts = posts else {return}
 			self.items.append(contentsOf: posts)
 			self.adapter.reloadData()

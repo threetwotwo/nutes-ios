@@ -53,55 +53,56 @@ class EditViewController: UIViewController, UITextViewDelegate {
 			UIGraphicsBeginImageContextWithOptions(self.imageView.bounds.size, self.imageView.isOpaque, 0.0)
 
 			self.imageView.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
-			let image = UIGraphicsGetImageFromCurrentImageContext()
+
+			guard let image = UIGraphicsGetImageFromCurrentImageContext(),
+				let imageData = image.jpegData(compressionQuality: 1),
+				let username = FirestoreManager.shared.username else {return}
+
 			UIGraphicsEndImageContext()
-			if let image = image,
-				let imageData = image.jpegData(compressionQuality: 1) {
-				//Create unique id
-				let timestamp = FieldValue.serverTimestamp()
-				guard let username = FirestoreManager.shared.username else {return}
-				let postID = "\(username)\(Timestamp.init().seconds)"
-				//Create reference to Cloud Storage
-				let imageRef = Storage.storage().reference().child(postID + ".jpg")
-				print(imageRef)
 
-				let uploadTask = imageRef.putData(imageData, metadata: nil) { (metadata, error) in
-					imageRef.downloadURL(completion: { (URL, error) in
-						guard error == nil else {
-							print(error?.localizedDescription ?? "Error uploading")
-							return
-						}
-						if let url = URL?.absoluteString {
-							let db = FirestoreManager.shared.db
+			//Create unique id
+			let timestamp = FieldValue.serverTimestamp()
+			let postID = "\(username)\(Timestamp.init().seconds)"
+			//Create reference to Cloud Storage
+			let imageRef = Storage.storage().reference().child(postID + ".jpg")
+			imageRef.putData(imageData, metadata: nil) { (metadata, error) in
+				imageRef.downloadURL(completion: { (URL, error) in
+					guard error == nil else {
+						print(error?.localizedDescription ?? "Error uploading")
+						return
+					}
+					if let url = URL?.absoluteString {
+						let db = FirestoreManager.shared.db
 
-							db!.collection("posts").document(postID).setData([
-								"username" : username,
-								"imageURL" : url,
-								"timestamp" : timestamp
-							]){
-								error in
-								if let error = error {
-									print("Error adding document: \(error)")
-								} else {
-									print("posts Document added with ID: \(username)")
-									//notifies the app that a post has been uploaded to cloud storage
-									NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
-									//increment user's post count
-									guard let userID = Auth.auth().currentUser?.uid else {return}
-									let user = db!.collection("users").document(userID)
-									user.getDocument { (document, error) in
-										if let document = document, document.exists,
-										let postCount = document.get("posts") as? Int{
-											user.updateData(["posts" : postCount + 1])
-										} else {
-											print("Document does not exist")
-										}
-									}
+						db!.collection("posts").document(postID).setData([
+							"username" : username,
+							"imageURL" : url,
+							"timestamp" : timestamp
+						]){
+							error in
+							guard error == nil else {
+								print(error?.localizedDescription ?? "Error adding document")
+								return
+							}
+
+							print("post added with ID: \(username)")
+
+							//notifies the app that a post has been uploaded to cloud storage
+							NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
+							//increment user's post count
+							guard let userID = Auth.auth().currentUser?.uid else {return}
+							let user = db!.collection("users").document(userID)
+							user.getDocument { (document, error) in
+								guard let document = document,
+									let postCount = document.get("posts") as? Int else {
+										print("Document does not exist")
+										return
 								}
+								user.updateData(["posts" : postCount + 1])
 							}
 						}
-					})
-				}
+					}
+				})
 			}
 		}
 		self.dismiss(animated: true, completion: nil)
@@ -132,10 +133,10 @@ class EditViewController: UIViewController, UITextViewDelegate {
 			self.showKeyboard(notification)
 		}
 
-//		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
-//			// Any code you put in here will be called when the keyboard is about to hide
-//			self.hideKeyboard()
-//		}
+		//		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in
+		//			// Any code you put in here will be called when the keyboard is about to hide
+		//			self.hideKeyboard()
+		//		}
 
 	}
 

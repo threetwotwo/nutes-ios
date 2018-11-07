@@ -17,8 +17,8 @@ class UserProfileNuteSectionController: ListSectionController {
 	//Configure cell bottom margin
 	override init() {
 		super.init()
-		self.minimumInteritemSpacing = 1
-		inset = UIEdgeInsets(top: 0, left: 0, bottom: 1, right: 0)
+		self.minimumInteritemSpacing = 2
+		inset = UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)
 	}
 
 	override func didUpdate(to object: Any) {
@@ -55,7 +55,7 @@ class UserProfileNuteSectionController: ListSectionController {
 
 	fileprivate var itemSize: CGSize {
 		let collectionViewWidth = collectionContext?.containerSize.width ?? 0
-		let itemWidth = ((collectionViewWidth - 2) / 3)
+		let itemWidth = ((collectionViewWidth - 4) / 3)
 		let heightRatio: CGFloat = 1
 		return CGSize(width: itemWidth, height: itemWidth * heightRatio)
 	}

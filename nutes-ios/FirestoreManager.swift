@@ -40,7 +40,7 @@ class FirestoreManager {
 			self.uid = uid
 
 			self.db.collection("usernames").document(username).setData([
-				"user" : uid,
+				"uid" : uid,
 				"email" : email
 			]) {
 				error in

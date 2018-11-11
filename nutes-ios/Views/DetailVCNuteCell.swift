@@ -1,5 +1,5 @@
 //
-//  NuteBigCell.swift
+//  DetailVCNuteCell.swift
 //  nutes-ios
 //
 //  Created by Gary on 10/23/18.
@@ -8,6 +8,6 @@
 
 import UIKit
 
-class NuteBigCell: UICollectionViewCell {
+class DetailVCNuteCell: UICollectionViewCell {
 	@IBOutlet weak var imageView: UIImageView!
 }

@@ -25,8 +25,20 @@ class FirestoreManager {
 		db.settings = settings
 	}
 
+	func getUserInfo(uid: String, completion: @escaping (_ data: [String:Any]) -> ()) {
+		db.collection("users").document(uid).getDocument { (document, error) in
+			guard let document = document else {
+				print("Document does not exist")
+				return
+			}
+			if let data = document.data() {
+				completion(data)
+			}
+		}
+	}
+
 	//Create user and sign in
-	func createUser(withEmail email: String, username: String, password: String, completion: @escaping () -> ()) {
+	func createUser(withEmail email: String, fullname:String, username: String, password: String, completion: @escaping () -> ()) {
 		Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
 			guard error == nil else {
 				print(error?.localizedDescription ?? "error in creating user")
@@ -54,7 +66,8 @@ class FirestoreManager {
 
 			self.db.collection("users").document(uid).setData([
 				"email" : email,
-				"username" : self.username,
+				"fullname" : fullname,
+				"username" : username,
 				"timestamp" : FieldValue.serverTimestamp(),
 				"posts" : 0,
 				"followers" : 0,
@@ -107,3 +120,4 @@ class FirestoreManager {
 	}
 
 }
+

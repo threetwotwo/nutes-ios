@@ -1,5 +1,5 @@
 //
-//  NuteBigSectionController.swift
+//  DetailVCSectionController.swift
 //  nutes-ios
 //
 //  Created by Gary on 10/23/18.
@@ -9,7 +9,7 @@
 import Foundation
 import IGListKit
 
-class NuteBigSectionController: ListSectionController {
+class DetailVCSectionController: ListSectionController {
 	var post: Post?
 
 	override func didUpdate(to object: Any) {
@@ -27,7 +27,7 @@ class NuteBigSectionController: ListSectionController {
 				return UICollectionViewCell()
 		}
 
-		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "NuteBigCell", for: self, at: index) as! NuteBigCell
+		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "NuteBigCell", for: self, at: index) as! DetailVCNuteCell
 		if let imageURL = URL(string: post.imageURL!) {
 			cell.imageView.sd_setImage(with: imageURL)
 		}

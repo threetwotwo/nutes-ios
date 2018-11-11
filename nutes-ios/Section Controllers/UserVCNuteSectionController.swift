@@ -1,5 +1,5 @@
 //
-//  UserProfileNuteSectionController.swift
+//  UserVCNuteSectionController.swift
 //  nutes-ios
 //
 //  Created by Gary on 10/23/18.
@@ -10,7 +10,7 @@ import Foundation
 import IGListKit
 import SDWebImage
 
-class UserProfileNuteSectionController: ListSectionController {
+class UserVCNuteSectionController: ListSectionController {
 
 	var post: Post?
 

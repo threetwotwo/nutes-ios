@@ -1,5 +1,5 @@
 //
-//  UserProfileHeaderSectionController.swift
+//  UserVCHeaderSectionController.swift
 //  nutes-ios
 //
 //  Created by Gary on 10/23/18.
@@ -9,7 +9,7 @@
 import Foundation
 import IGListKit
 
-class UserProfileHeaderSectionController: ListSectionController {
+class UserVCHeaderSectionController: ListSectionController {
 	var user: User?
 
 	override func didUpdate(to object: Any) {

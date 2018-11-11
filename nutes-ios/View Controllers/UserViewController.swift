@@ -1,5 +1,5 @@
 //
-//  UserProfileViewController.swift
+//  UserViewController.swift
 //  nutes-ios
 //
 //  Created by Gary on 10/23/18.
@@ -12,7 +12,7 @@ import SDWebImage
 import FirebaseFirestore
 import FirebaseAuth
 
-class UserProfileViewController: UIViewController, UICollectionViewDelegate {
+class UserViewController: UIViewController, UICollectionViewDelegate {
 
 	//MARK: - IBOutlets
 	@IBOutlet weak var collectionView: UICollectionView!
@@ -21,7 +21,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 	var items: [ListDiffable] = []
 	var db: Firestore!
 	var firestore = FirestoreManager.shared
-	var user = User()
+	var user: User?
 
 	//MARK: - Adapter
 	lazy var adapter: ListAdapter = {
@@ -39,25 +39,31 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 		_ = adapter
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		db = FirestoreManager.shared.db
-		if let uid = Auth.auth().currentUser?.uid {
-			db.collection("users").document(uid).getDocument { (document, error) in
-				if let document = document, document.exists,
-					let postCount = document.get("posts") as? Int{
-					self.user.posts = postCount
-				} else {
-					print("Document does not exist")
-				}
-			}
-		}
-		reloadItems()
 		NotificationCenter.default.addObserver(self, selector: #selector(reloadItems), name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
+		guard let user = user else {
+			FirestoreManager.shared.getUserInfo(uid: firestore.uid) { (data) in
+				let posts = data["posts"] as! Int
+				self.user = User()
+				self.user?.posts = posts
+				self.user?.uid = self.firestore.uid
+				self.user?.username = self.firestore.username
+
+				self.reloadItems()
+			}
+			return
+		}
+		FirestoreManager.shared.getUserInfo(uid: user.uid) { (data) in
+			let posts = data["posts"] as! Int
+			self.user?.posts = posts
+			self.reloadItems()
+		}
 	}
 
 	@objc fileprivate func reloadItems() {
 		items.removeAll()
-		items.append(user)
+		items.append(user!)
 
-		firestore.getPostsForUser(username: firestore.username) { (posts) in
+		firestore.getPostsForUser(username: (user?.username)!) { (posts) in
 			guard let posts = posts else {return}
 			self.items.append(contentsOf: posts)
 			self.adapter.reloadData()
@@ -67,7 +73,7 @@ class UserProfileViewController: UIViewController, UICollectionViewDelegate {
 }
 
 //MARK: - Data Source
-extension UserProfileViewController: ListAdapterDataSource {
+extension UserViewController: ListAdapterDataSource {
 
 	func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
 		return items
@@ -76,9 +82,9 @@ extension UserProfileViewController: ListAdapterDataSource {
 	func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
 		switch object {
 		case is User:
-			return UserProfileHeaderSectionController()
+			return UserVCHeaderSectionController()
 		default:
-			return UserProfileNuteSectionController()
+			return UserVCNuteSectionController()
 		}
 	}
 

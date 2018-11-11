@@ -40,7 +40,7 @@ extension DetailViewController: ListAdapterDataSource {
 	}
 
 	func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-		return NuteBigSectionController()
+		return DetailVCSectionController()
 	}
 
 	func emptyView(for listAdapter: ListAdapter) -> UIView? {

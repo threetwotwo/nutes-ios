@@ -10,8 +10,8 @@ import Foundation
 import IGListKit
 
 class User {
-	static var username: String!
-	static var uid: String!
+	var uid: String!
+	var username: String!
 	var identifier: String = UUID().uuidString
 	var posts: Int! = 0
 

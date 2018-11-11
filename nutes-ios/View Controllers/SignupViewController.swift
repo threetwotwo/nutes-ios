@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import FirebaseAuth
-import FirebaseFirestore
 
 class SignupViewController: UIViewController {
 
 	//MARK: - IBOutlets
 	@IBOutlet weak var emailField: UITextField!
+	@IBOutlet weak var fullnameField: UITextField!
 	@IBOutlet weak var usernameField: UITextField!
 	@IBOutlet weak var passwordField: UITextField!
 	@IBOutlet weak var signupButton: UIButton!
@@ -23,8 +22,8 @@ class SignupViewController: UIViewController {
 	//MARK: - IBActions
 	fileprivate func updateUsernameMessage(using username: String) {
 		guard isSignupMode else {return}
-		let docRef = self.db.collection("usernames").document(username)
-		docRef.getDocument { (document, error) in
+
+		firestore.db.collection("usernames").document(username).getDocument { (document, error) in
 			guard error == nil,
 			let document = document else {
 				print(error?.localizedDescription ?? "error in fetching document")
@@ -53,13 +52,14 @@ class SignupViewController: UIViewController {
 
 		guard usernameField.text != "",
 		let email = emailField.text,
+		let fullname = fullnameField.text,
 		let username = usernameField.text,
 		let password = passwordField.text else {return}
 
 		let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainscreen") as! UITabBarController
 
 		if isSignupMode {
-			firestore.createUser(withEmail: email, username: username, password: password) {
+			firestore.createUser(withEmail: email, fullname: fullname, username: username, password: password) {
 				print("\(email) registered!")
 				self.present(vc, animated: true)
 			}
@@ -78,7 +78,6 @@ class SignupViewController: UIViewController {
 	}
 
 	//MARK: - variables
-	var db: Firestore!
 	var firestore = FirestoreManager.shared
 	var isSignupMode = true
 	var usernameTaken = true
@@ -95,7 +94,6 @@ class SignupViewController: UIViewController {
 		updateButtons()
 		usernameMessageLabel.text = ""
 		usernameField.delegate = self
-		db = FirestoreManager.shared.db
     }
 
 	override func viewWillAppear(_ animated: Bool) {

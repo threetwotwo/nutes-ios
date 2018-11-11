@@ -8,20 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */; };
+		4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3102195A389009330A7 /* SearchViewController.swift */; };
+		4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */; };
 		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
+		4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */; };
 		4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89725217F46DA004D6388 /* AppDelegate.swift */; };
 		4EB8972B217F46DA004D6388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89729217F46DA004D6388 /* Main.storyboard */; };
 		4EB8972D217F46DB004D6388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EB8972C217F46DB004D6388 /* Assets.xcassets */; };
 		4EB89730217F46DB004D6388 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EB8972E217F46DB004D6388 /* LaunchScreen.storyboard */; };
-		4EB8973F217F48BD004D6388 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8973E217F48BD004D6388 /* UserProfileViewController.swift */; };
+		4EB8973F217F48BD004D6388 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8973E217F48BD004D6388 /* UserViewController.swift */; };
 		4EB89748217F4995004D6388 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89747217F4995004D6388 /* User.swift */; };
 		4EB8974B217F49DF004D6388 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974A217F49DF004D6388 /* Post.swift */; };
 		4EB8974D217F4A5F004D6388 /* NuteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974C217F4A5F004D6388 /* NuteCell.swift */; };
-		4EB89750217F4A84004D6388 /* NuteBigCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974F217F4A84004D6388 /* NuteBigCell.swift */; };
+		4EB89750217F4A84004D6388 /* DetailVCNuteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974F217F4A84004D6388 /* DetailVCNuteCell.swift */; };
 		4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89751217F4A9B004D6388 /* UserProfileCell.swift */; };
-		4EB89754217F4B00004D6388 /* UserProfileNuteSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89753217F4B00004D6388 /* UserProfileNuteSectionController.swift */; };
-		4EB89757217F4B24004D6388 /* UserProfileHeaderSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89756217F4B24004D6388 /* UserProfileHeaderSectionController.swift */; };
-		4EB89759217F4B44004D6388 /* NuteBigSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89758217F4B44004D6388 /* NuteBigSectionController.swift */; };
+		4EB89754217F4B00004D6388 /* UserVCNuteSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */; };
+		4EB89757217F4B24004D6388 /* UserVCHeaderSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */; };
+		4EB89759217F4B44004D6388 /* DetailVCSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89758217F4B44004D6388 /* DetailVCSectionController.swift */; };
 		4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975A217F4B64004D6388 /* DetailViewController.swift */; };
 		4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975C217F4BB6004D6388 /* EditViewController.swift */; };
 		4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975E217F545D004D6388 /* FeedViewController.swift */; };
@@ -32,22 +35,25 @@
 
 /* Begin PBXFileReference section */
 		4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		4E5DA3102195A389009330A7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserCell.swift; sourceTree = "<group>"; };
 		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserSectionController.swift; sourceTree = "<group>"; };
 		4EB89722217F46DA004D6388 /* nutes-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nutes-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB89725217F46DA004D6388 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EB8972A217F46DA004D6388 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4EB8972C217F46DB004D6388 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4EB8972F217F46DB004D6388 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4EB89731217F46DB004D6388 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4EB8973E217F48BD004D6388 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		4EB8973E217F48BD004D6388 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		4EB89747217F4995004D6388 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4EB8974A217F49DF004D6388 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4EB8974C217F4A5F004D6388 /* NuteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteCell.swift; sourceTree = "<group>"; };
-		4EB8974F217F4A84004D6388 /* NuteBigCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteBigCell.swift; sourceTree = "<group>"; };
+		4EB8974F217F4A84004D6388 /* DetailVCNuteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVCNuteCell.swift; sourceTree = "<group>"; };
 		4EB89751217F4A9B004D6388 /* UserProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileCell.swift; sourceTree = "<group>"; };
-		4EB89753217F4B00004D6388 /* UserProfileNuteSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileNuteSectionController.swift; sourceTree = "<group>"; };
-		4EB89756217F4B24004D6388 /* UserProfileHeaderSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeaderSectionController.swift; sourceTree = "<group>"; };
-		4EB89758217F4B44004D6388 /* NuteBigSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteBigSectionController.swift; sourceTree = "<group>"; };
+		4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCNuteSectionController.swift; sourceTree = "<group>"; };
+		4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCHeaderSectionController.swift; sourceTree = "<group>"; };
+		4EB89758217F4B44004D6388 /* DetailVCSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVCSectionController.swift; sourceTree = "<group>"; };
 		4EB8975A217F4B64004D6388 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		4EB8975C217F4BB6004D6388 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		4EB8975E217F545D004D6388 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -128,9 +134,10 @@
 			isa = PBXGroup;
 			children = (
 				4E979CFD21807FCF009A3DAC /* SignupViewController.swift */,
+				4E5DA3102195A389009330A7 /* SearchViewController.swift */,
 				4EB8975E217F545D004D6388 /* FeedViewController.swift */,
 				4EB8975C217F4BB6004D6388 /* EditViewController.swift */,
-				4EB8973E217F48BD004D6388 /* UserProfileViewController.swift */,
+				4EB8973E217F48BD004D6388 /* UserViewController.swift */,
 				4EB8975A217F4B64004D6388 /* DetailViewController.swift */,
 			);
 			path = "View Controllers";
@@ -149,7 +156,8 @@
 			isa = PBXGroup;
 			children = (
 				4EB8974C217F4A5F004D6388 /* NuteCell.swift */,
-				4EB8974F217F4A84004D6388 /* NuteBigCell.swift */,
+				4EB8974F217F4A84004D6388 /* DetailVCNuteCell.swift */,
+				4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */,
 				4EB89751217F4A9B004D6388 /* UserProfileCell.swift */,
 			);
 			path = Views;
@@ -158,9 +166,10 @@
 		4EB89755217F4B0C004D6388 /* Section Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				4EB89753217F4B00004D6388 /* UserProfileNuteSectionController.swift */,
-				4EB89756217F4B24004D6388 /* UserProfileHeaderSectionController.swift */,
-				4EB89758217F4B44004D6388 /* NuteBigSectionController.swift */,
+				4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */,
+				4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */,
+				4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */,
+				4EB89758217F4B44004D6388 /* DetailVCSectionController.swift */,
 			);
 			path = "Section Controllers";
 			sourceTree = "<group>";
@@ -311,18 +320,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */,
+				4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */,
 				4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */,
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
-				4EB8973F217F48BD004D6388 /* UserProfileViewController.swift in Sources */,
+				4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */,
+				4EB8973F217F48BD004D6388 /* UserViewController.swift in Sources */,
 				4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */,
 				4EB89748217F4995004D6388 /* User.swift in Sources */,
 				4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */,
 				4EB8974B217F49DF004D6388 /* Post.swift in Sources */,
-				4EB89750217F4A84004D6388 /* NuteBigCell.swift in Sources */,
-				4EB89759217F4B44004D6388 /* NuteBigSectionController.swift in Sources */,
+				4EB89750217F4A84004D6388 /* DetailVCNuteCell.swift in Sources */,
+				4EB89759217F4B44004D6388 /* DetailVCSectionController.swift in Sources */,
+				4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */,
 				4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */,
-				4EB89757217F4B24004D6388 /* UserProfileHeaderSectionController.swift in Sources */,
-				4EB89754217F4B00004D6388 /* UserProfileNuteSectionController.swift in Sources */,
+				4EB89757217F4B24004D6388 /* UserVCHeaderSectionController.swift in Sources */,
+				4EB89754217F4B00004D6388 /* UserVCNuteSectionController.swift in Sources */,
 				4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */,
 				4EB8974D217F4A5F004D6388 /* NuteCell.swift in Sources */,
 				4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */,

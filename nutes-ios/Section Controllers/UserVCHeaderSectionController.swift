@@ -28,7 +28,12 @@ class UserVCHeaderSectionController: ListSectionController {
 		//Round the corners
 		cell.userProfileImage.layer.cornerRadius = imageHeight/2
 		//update labels
-		cell.postLabel.text = "\(user?.posts ?? 0)"
+		if let user = user {
+			cell.postLabel.text = "\(user.posts ?? 0)"
+			let buttonTitle =  user.uid == FirestoreManager.shared.uid ? "Edit Profile" : (user.isFollowing ? "Unfollow" : "Follow")
+			cell.followButton.setTitle(buttonTitle, for: [])
+		}
+
 		return cell
 	}
 

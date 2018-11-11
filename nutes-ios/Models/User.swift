@@ -14,7 +14,7 @@ class User {
 	var username: String!
 	var identifier: String = UUID().uuidString
 	var posts: Int! = 0
-
+	var isFollowing = false
 }
 
 extension User: ListDiffable {

@@ -17,6 +17,24 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	//MARK: - IBOutlets
 	@IBOutlet weak var collectionView: UICollectionView!
 
+	@IBAction func followButtonPressed(_ sender: UIButton) {
+		print("pressed follow button")
+		guard let followerID = firestore.uid,
+			let followedID = user?.uid else {return}
+		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").setData([
+			"followerID" : followerID,
+			"followedID" : followedID,
+			"timestamp" : FieldValue.serverTimestamp()
+		]) { error in
+			if let error = error {
+				print("Error adding document: \(error)")
+			} else {
+				print("Document added")
+				
+			}
+		}
+	}
+
 	//MARK: - Variables
 	var items: [ListDiffable] = []
 	var db: Firestore!
@@ -56,6 +74,25 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 			let posts = data["posts"] as! Int
 			self.user?.posts = posts
 			self.reloadItems()
+		}
+
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		guard let user = user else {return}
+		guard let followerID = firestore.uid,
+			let followedID = user.uid else {return}
+		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").getDocument { (document, error) in
+			guard error == nil else {
+					print(error?.localizedDescription ?? "Error finding document")
+					return
+			}
+			if let document = document, document.exists {
+				print("isfollowing")
+				self.user?.isFollowing = true
+				self.reloadItems()
+			}
 		}
 	}
 

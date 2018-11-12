@@ -19,18 +19,19 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 	@IBAction func followButtonPressed(_ sender: UIButton) {
 		print("pressed follow button")
-		guard let followerID = firestore.uid,
-			let followedID = user?.uid else {return}
-		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").setData([
-			"followerID" : followerID,
-			"followedID" : followedID,
-			"timestamp" : FieldValue.serverTimestamp()
-		]) { error in
-			if let error = error {
-				print("Error adding document: \(error)")
-			} else {
-				print("Document added")
-				
+
+		guard let user = user,
+			let followedID = user.uid else {return}
+
+		if user.isFollowing {
+			firestore.unfollowUser(withUID: followedID) {
+				self.user?.isFollowing = false
+				self.adapter.collectionView?.reloadSections([0])
+			}
+		} else {
+			firestore.followUser(withUID: followedID) {
+				self.user?.isFollowing = true
+				self.adapter.collectionView?.reloadSections([0])
 			}
 		}
 	}
@@ -61,11 +62,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		guard let user = user else {
 			FirestoreManager.shared.getUserInfo(uid: firestore.uid) { (data) in
 				let posts = data["posts"] as! Int
-				self.user = User()
-				self.user?.posts = posts
-				self.user?.uid = self.firestore.uid
-				self.user?.username = self.firestore.username
-
+				self.user = User(uid: self.firestore.uid, username: self.firestore.username, posts: posts)
 				self.reloadItems()
 			}
 			return
@@ -80,13 +77,15 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
-		guard let user = user else {return}
-		guard let followerID = firestore.uid,
+		guard let user = user,
+			let followerID = firestore.uid,
 			let followedID = user.uid else {return}
 		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").getDocument { (document, error) in
 			guard error == nil else {
 					print(error?.localizedDescription ?? "Error finding document")
-					return
+				self.user?.isFollowing = false
+				self.reloadItems()
+				return
 			}
 			if let document = document, document.exists {
 				print("isfollowing")
@@ -97,10 +96,12 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	}
 
 	@objc fileprivate func reloadItems() {
-		items.removeAll()
-		items.append(user!)
+		guard let user = user else {return}
 
-		firestore.getPostsForUser(username: (user?.username)!) { (posts) in
+		items.removeAll()
+		items.append(user)
+
+		firestore.getPostsForUser(username: user.username) { (posts) in
 			guard let posts = posts else {return}
 			self.items.append(contentsOf: posts)
 			self.adapter.reloadData()

@@ -25,6 +25,7 @@ class FirestoreManager {
 		db.settings = settings
 	}
 
+	//MARK: - Get a user's info
 	func getUserInfo(uid: String, completion: @escaping (_ data: [String:Any]) -> ()) {
 		db.collection("users").document(uid).getDocument { (document, error) in
 			guard let document = document else {
@@ -37,7 +38,35 @@ class FirestoreManager {
 		}
 	}
 
-	//Create user and sign in
+	//MARK: - Follow/Unfollow
+	func followUser(withUID followedID: String, completion: @escaping ()->()) {
+		guard let followerID = self.uid else {return}
+		db.collection("relationships").document("\(followerID)_\(followedID)").setData([
+			"followerID" : followerID,
+			"followedID" : followedID,
+			"timestamp" : FieldValue.serverTimestamp()
+		]) { error in
+			if let error = error {
+				print("Error adding document: \(error)")
+			} else {
+				print("Document added")
+				completion()
+			}
+		}
+	}
+
+	func unfollowUser(withUID followedID: String, completion: @escaping ()->()) {
+		guard let followerID = self.uid else {return}
+		db.collection("relationships").document("\(followerID)_\(followedID)").delete { (error) in
+			guard error == nil else {
+				print("error deleting document")
+				return
+			}
+			completion()
+		}
+	}
+
+	//MARK: - Login/Signup
 	func createUser(withEmail email: String, fullname:String, username: String, password: String, completion: @escaping () -> ()) {
 		Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
 			guard error == nil else {
@@ -102,6 +131,7 @@ class FirestoreManager {
 		}
 	}
 
+	//MARK: - Retrieve posts
 	func getPostsForUser(username: String, completion: @escaping (_ posts:[ListDiffable]?) -> ()) {
 		db.collection("posts").whereField("username", isEqualTo: username).order(by: "timestamp", descending: true).getDocuments { (documents, error) in
 			guard error == nil,

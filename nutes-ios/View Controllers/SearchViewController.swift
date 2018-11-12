@@ -37,9 +37,9 @@ class SearchViewController: UIViewController {
 				return
 			}
 			for document in documents {
-				let user = User()
-				user.uid = document.documentID
-				user.username = document.get("username") as? String
+				guard let posts = document.get("posts") as? Int,
+					let username = document.get("username") as? String else {return}
+				let user = User(uid: document.documentID, username: username , posts: posts)
 				print(user.username)
 				self.items.append(user)
 			}

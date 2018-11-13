@@ -17,6 +17,15 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	//MARK: - IBOutlets
 	@IBOutlet weak var collectionView: UICollectionView!
 
+	@objc fileprivate func reloadHeader() {
+		guard let uid = user == nil ? firestore.currentUser.uid : user?.uid else {return}
+		FirestoreManager.shared.getUserInfo(uid: uid) { (data) in
+			let posts = data["posts"] as! Int
+			self.user?.posts = posts
+			self.adapter.collectionView?.reloadSections([0])
+		}
+	}
+
 	@IBAction func followButtonPressed(_ sender: UIButton) {
 		print("pressed follow button")
 
@@ -26,19 +35,18 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		if user.isFollowing {
 			firestore.unfollowUser(withUID: followedID) {
 				self.user?.isFollowing = false
-				self.adapter.collectionView?.reloadSections([0])
+				self.reloadHeader()
 			}
 		} else {
 			firestore.followUser(withUID: followedID) {
 				self.user?.isFollowing = true
-				self.adapter.collectionView?.reloadSections([0])
+				self.reloadHeader()
 			}
 		}
 	}
 
 	//MARK: - Variables
 	var items: [ListDiffable] = []
-	var db: Firestore!
 	var firestore = FirestoreManager.shared
 	var user: User?
 
@@ -56,55 +64,49 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
 		_ = adapter
-		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
-		db = FirestoreManager.shared.db
 		NotificationCenter.default.addObserver(self, selector: #selector(reloadItems), name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
-		guard let user = user else {
-			FirestoreManager.shared.getUserInfo(uid: firestore.uid) { (data) in
-				let posts = data["posts"] as! Int
-				self.user = User(uid: self.firestore.uid, username: self.firestore.username, posts: posts)
-				self.reloadItems()
-			}
-			return
-		}
-		FirestoreManager.shared.getUserInfo(uid: user.uid) { (data) in
-			let posts = data["posts"] as! Int
-			self.user?.posts = posts
-			self.reloadItems()
+
+		if user == nil {
+			self.user = firestore.currentUser
 		}
 
+		title = user?.username
+
+		reloadItems()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 		guard let user = user,
-			let followerID = firestore.uid,
+			let followerID = firestore.currentUser.uid,
 			let followedID = user.uid else {return}
 		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").getDocument { (document, error) in
 			guard error == nil else {
 					print(error?.localizedDescription ?? "Error finding document")
 				self.user?.isFollowing = false
-				self.reloadItems()
+				self.reloadHeader()
 				return
 			}
 			if let document = document, document.exists {
 				print("isfollowing")
 				self.user?.isFollowing = true
-				self.reloadItems()
+				self.reloadHeader()
 			}
 		}
 	}
 
 	@objc fileprivate func reloadItems() {
-		guard let user = user else {return}
-
 		items.removeAll()
+
+		guard let user = (user?.uid == firestore.currentUser.uid) ? firestore.currentUser : self.user else {return}
+
 		items.append(user)
 
 		firestore.getPostsForUser(username: user.username) { (posts) in
 			guard let posts = posts else {return}
 			self.items.append(contentsOf: posts)
 			self.adapter.reloadData()
+			self.reloadHeader()
 		}
 	}
 

@@ -16,8 +16,7 @@ class FirestoreManager {
 	static let shared = FirestoreManager()
 
 	var db: Firestore!
-	var username: String!
-	var uid: String!
+	var currentUser: User!
 
 	func configureDB() {
 		let settings = db.settings
@@ -40,7 +39,7 @@ class FirestoreManager {
 
 	//MARK: - Follow/Unfollow
 	func followUser(withUID followedID: String, completion: @escaping ()->()) {
-		guard let followerID = self.uid else {return}
+		guard let followerID = self.currentUser.uid else {return}
 		db.collection("relationships").document("\(followerID)_\(followedID)").setData([
 			"followerID" : followerID,
 			"followedID" : followedID,
@@ -56,7 +55,7 @@ class FirestoreManager {
 	}
 
 	func unfollowUser(withUID followedID: String, completion: @escaping ()->()) {
-		guard let followerID = self.uid else {return}
+		guard let followerID = self.currentUser.uid else {return}
 		db.collection("relationships").document("\(followerID)_\(followedID)").delete { (error) in
 			guard error == nil else {
 				print("error deleting document")
@@ -76,9 +75,6 @@ class FirestoreManager {
 
 			guard let email = authResult?.user.email,
 				let uid = Auth.auth().currentUser?.uid else { return }
-
-			self.username = username
-			self.uid = uid
 
 			self.db.collection("usernames").document(username).setData([
 				"uid" : uid,
@@ -109,7 +105,11 @@ class FirestoreManager {
 					print("user Document added with ID: \(uid)")
 				}
 			}
-			completion()
+			self.getUserInfo(uid: uid) { (data) in
+				let posts = data["posts"] as! Int
+				self.currentUser = User(uid: uid, username: username, posts: posts)
+				completion()
+			}
 		}
 	}
 
@@ -117,6 +117,7 @@ class FirestoreManager {
 		self.db.collection("usernames").document(username).getDocument { (document, error) in
 			guard error == nil,
 				let document = document,
+				let uid = document.get("uid") as? String,
 				let email = document.get("email") as? String else {return}
 
 			Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
@@ -124,9 +125,11 @@ class FirestoreManager {
 					print(error?.localizedDescription ?? "error in logging in")
 					return
 				}
-				self.username = username
-				self.uid = Auth.auth().currentUser?.uid
-				completion()
+				self.getUserInfo(uid: uid) { (data) in
+					let posts = data["posts"] as! Int
+					self.currentUser = User(uid: uid, username: username, posts: posts)
+					completion()
+				}
 			}
 		}
 	}

@@ -56,7 +56,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 
 			guard let image = UIGraphicsGetImageFromCurrentImageContext(),
 				let imageData = image.jpegData(compressionQuality: 1),
-				let username = FirestoreManager.shared.username else {return}
+				let username = FirestoreManager.shared.currentUser.username else {return}
 
 			UIGraphicsEndImageContext()
 

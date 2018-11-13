@@ -30,7 +30,7 @@ class UserVCHeaderSectionController: ListSectionController {
 		//update labels
 		if let user = user {
 			cell.postLabel.text = "\(user.posts ?? 0)"
-			let buttonTitle =  user.uid == FirestoreManager.shared.uid ? "Edit Profile" : (user.isFollowing ? "Unfollow" : "Follow")
+			let buttonTitle = user.uid == FirestoreManager.shared.currentUser.uid ? "Edit Profile" : (user.isFollowing ? "Unfollow" : "Follow")
 			cell.followButton.setTitle(buttonTitle, for: [])
 		}
 

@@ -16,7 +16,10 @@ class FeedViewController: UIViewController {
 		do {
 			try Auth.auth().signOut()
 			print("User logged out!")
-			self.tabBarController?.dismiss(animated: true, completion: nil)
+			let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SignUpVC") as! SignupViewController
+			self.present(vc, animated: true, completion: nil)
+//			self.tabBarController?.dismiss(animated: true, completion: nil)
+
 		} catch {
 			print("Unable to logout")
 		}
@@ -25,7 +28,6 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
-		title = FirestoreManager.shared.currentUser.username
     }
 
 }

@@ -56,17 +56,21 @@ class SignupViewController: UIViewController {
 		let username = usernameField.text,
 		let password = passwordField.text else {return}
 
-		let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainscreen") as! UITabBarController
+		let tabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainscreen") as! UITabBarController
 
 		if isSignupMode {
 			firestore.createUser(withEmail: email, fullname: fullname, username: username, password: password) {
 				print("\(email) registered!")
-				self.present(vc, animated: true)
+				self.present(tabBarController, animated: true)
+//				tabBarController.present(vc, animated: true)
 			}
 		} else {
 			firestore.signIn(forUsername: username, password: password) {
 				print("\(username) logged in!")
-				self.present(vc, animated: true)
+				self.present(tabBarController, animated: true, completion: {
+				})
+//				self.dismiss(animated: true, completion: nil)
+//				tabBarController.present(vc, animated: true)
 			}
 		}
 	}

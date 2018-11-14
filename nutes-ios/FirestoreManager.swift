@@ -17,6 +17,15 @@ class FirestoreManager {
 
 	var db: Firestore!
 	var currentUser: User!
+	lazy var listener: ListenerRegistration = {
+		let listener = 	db.collection("users").document(currentUser.uid).addSnapshotListener { (document, error) in
+			guard let document = document else {
+				print("Document does not exist")
+				return
+			}
+		}
+		return listener
+	}()
 
 	func configureDB() {
 		let settings = db.settings
@@ -36,6 +45,20 @@ class FirestoreManager {
 			}
 		}
 	}
+
+	//MARK: - Observe changes for user
+	func observeUser(uid: String, completion: @escaping (_ data: [String:Any]) -> ()) {
+		db.collection("users").document(uid).addSnapshotListener { (document, error) in
+			guard let document = document else {
+				print("Document does not exist")
+				return
+			}
+			if let data = document.data() {
+				completion(data)
+			}
+		}
+	}
+
 
 	//MARK: - Follow/Unfollow
 	func followUser(withUID followedID: String, completion: @escaping ()->()) {
@@ -105,11 +128,8 @@ class FirestoreManager {
 					print("user Document added with ID: \(uid)")
 				}
 			}
-			self.getUserInfo(uid: uid) { (data) in
-				let posts = data["posts"] as! Int
-				self.currentUser = User(uid: uid, username: username, posts: posts)
-				completion()
-			}
+			self.currentUser = User(uid: uid, username: username)
+			completion()
 		}
 	}
 
@@ -125,18 +145,15 @@ class FirestoreManager {
 					print(error?.localizedDescription ?? "error in logging in")
 					return
 				}
-				self.getUserInfo(uid: uid) { (data) in
-					let posts = data["posts"] as! Int
-					self.currentUser = User(uid: uid, username: username, posts: posts)
-					completion()
-				}
+				self.currentUser = User(uid: uid, username: username)
+				completion()
 			}
 		}
 	}
 
 	//MARK: - Retrieve posts
-	func getPostsForUser(username: String, completion: @escaping (_ posts:[ListDiffable]?) -> ()) {
-		db.collection("posts").whereField("username", isEqualTo: username).order(by: "timestamp", descending: true).getDocuments { (documents, error) in
+	func getPostsForUser(uid: String, completion: @escaping (_ posts:[ListDiffable]?) -> ()) {
+		db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).getDocuments { (documents, error) in
 			guard error == nil,
 				let documents = documents?.documents else {
 					print(error?.localizedDescription ?? "Error fetching posts!")

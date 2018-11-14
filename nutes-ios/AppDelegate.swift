@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 
 	var window: UIWindow?
 
+	//Present EditVC modally
 	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
 		if viewController is EditViewController {
 			if let newVC = tabBarController.storyboard?.instantiateViewController(withIdentifier: "EditVC") {
@@ -29,8 +30,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 		// Override point for customization after application launch.
 		FirebaseApp.configure()
 
-		FirestoreManager.shared.db = Firestore.firestore()
-		FirestoreManager.shared.configureDB()
+		let firestore = FirestoreManager.shared
+		firestore.db = Firestore.firestore()
+		firestore.configureDB()
+			if let user = Auth.auth().currentUser {
+				print(user.email)
+				let tabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainscreen") as! UITabBarController
+				self.window?.rootViewController = tabBarController
+				self.window?.makeKeyAndVisible()
+				FirestoreManager.shared.getUserInfo(uid: user.uid) { (data) in
+					let username = data["username"] as! String
+					firestore.currentUser = User(uid: user.uid, username: username)
+				}
+
+			}
+
+
+
 		return true
 	}
 

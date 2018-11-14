@@ -16,10 +16,9 @@ class User {
 	var posts: Int! = 0
 	var isFollowing = false
 
-	init(uid: String, username: String, posts: Int) {
+	init(uid: String, username: String) {
 		self.uid = uid
 		self.username = username
-		self.posts = posts
 	}
 }
 

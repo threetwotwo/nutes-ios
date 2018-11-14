@@ -75,6 +75,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 						let db = FirestoreManager.shared.db
 
 						db!.collection("posts").document(postID).setData([
+							"uid" : FirestoreManager.shared.currentUser.uid,
 							"username" : username,
 							"imageURL" : url,
 							"timestamp" : timestamp
@@ -88,7 +89,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 							print("post added with ID: \(username)")
 
 							//notifies the app that a post has been uploaded to cloud storage
-							NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
+//							NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
 							//increment user's post count
 							guard let userID = Auth.auth().currentUser?.uid else {return}
 							let user = db!.collection("users").document(userID)

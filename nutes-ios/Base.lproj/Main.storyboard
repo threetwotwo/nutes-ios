@@ -13,7 +13,7 @@
         <!--Feed View Controller-->
         <scene sceneID="WhQ-xe-oaU">
             <objects>
-                <viewController id="hak-ll-yi3" customClass="FeedViewController" customModule="nutes_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FeedVC" id="hak-ll-yi3" customClass="FeedViewController" customModule="nutes_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6Xv-PS-WUm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -462,7 +462,7 @@
         <!--Signup View Controller-->
         <scene sceneID="JZ8-a4-xFd">
             <objects>
-                <viewController id="z0k-Nu-xsc" customClass="SignupViewController" customModule="nutes_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignUpVC" id="z0k-Nu-xsc" customClass="SignupViewController" customModule="nutes_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ydu-uU-Kkq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

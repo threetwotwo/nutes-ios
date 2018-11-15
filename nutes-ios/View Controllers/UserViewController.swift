@@ -17,21 +17,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	//MARK: - IBOutlets
 	@IBOutlet weak var collectionView: UICollectionView!
 
-	@objc fileprivate func loadHeader() {
-		guard let uid = user == nil ? firestore.currentUser.uid : user?.uid else {return}
-		listener = firestore.db.collection("users").document(uid).addSnapshotListener { (document, error) in
-			guard let document = document else {
-				print("Document does not exist")
-				return
-			}
-			if let data = document.data() {
-				let posts = data["posts"] as! Int
-				self.user?.posts = posts
-				self.adapter.collectionView?.reloadSections([0])
-			}
-		}
-	}
-
+	//MARK: - IBActions
 	@IBAction func followButtonPressed(_ sender: UIButton) {
 		print("pressed follow button")
 
@@ -41,12 +27,12 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		if user.isFollowing {
 			firestore.unfollowUser(withUID: followedID) {
 				self.user?.isFollowing = false
-				self.loadHeader()
+				self.reloadHeader()
 			}
 		} else {
 			firestore.followUser(withUID: followedID) {
 				self.user?.isFollowing = true
-				self.loadHeader()
+				self.reloadHeader()
 			}
 		}
 	}
@@ -71,7 +57,6 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
 		_ = adapter
-//		NotificationCenter.default.addObserver(self, selector: #selector(loadItems), name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
 
 		if user == nil {
 			self.user = firestore.currentUser
@@ -79,53 +64,63 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 		title = user?.username
 
-		loadItems()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 
-		let followerID = firestore.currentUser.uid
-		let followedID = user?.uid
+		//once user is not nill, load header.
+		//load posts once header has finished loading
+		loadHeader {
+			self.loadPosts()
+		}
+
+		guard let followerID = firestore.currentUser.uid,
+			let followedID = user?.uid else {return}
 		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").getDocument { (document, error) in
 			guard error == nil else {
 				print(error?.localizedDescription ?? "Error finding document")
 				self.user?.isFollowing = false
-				self.loadHeader()
 				return
 			}
 			if let document = document, document.exists {
 				print("isfollowing")
 				self.user?.isFollowing = true
-				self.loadHeader()
 			}
 		}
 	}
 
-//	override func viewWillDisappear(_ animated: Bool) {
-//		super.viewWillDisappear(true)
-//		self.listener.remove()
-//	}
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(true)
+		listener.remove()
+	}
 
-	@objc fileprivate func loadItems() {
-		items.removeAll()
+	//MARK: - Data fetching
+	@objc fileprivate func loadHeader(completion: @escaping ()->()) {
+		guard let user = user else {return}
+		listener = firestore.addUserListener(uid: user.uid) { (data) in
+			let posts = data["posts"] as! Int
+			self.user?.posts = posts
 
-		guard let user = (user?.uid == firestore.currentUser.uid) ? firestore.currentUser : self.user else {return}
-
-		items.append(user)
-
-		firestore.getPostsForUser(uid: user.uid) { (posts) in
-			guard let posts = posts else {return}
-			self.items.append(contentsOf: posts)
-			self.adapter.reloadData()
-			self.loadHeader()
+			completion()
 		}
 	}
 
-	@objc fileprivate func reloadItems() {
-		guard let user = user,
-			user.uid == firestore.currentUser.uid else {return}
-		loadItems()
+	@objc fileprivate func reloadHeader() {
+		self.adapter.collectionView?.reloadSections([0])
+	}
+
+
+	@objc fileprivate func loadPosts() {
+		guard let user = user else {return}
+
+		firestore.getPostsForUser(uid: user.uid) { (posts) in
+			guard let posts = posts else {return}
+			self.items.removeAll()
+			self.items.append(user)
+			self.items.append(contentsOf: posts)
+			self.adapter.reloadData()
+		}
 	}
 
 }

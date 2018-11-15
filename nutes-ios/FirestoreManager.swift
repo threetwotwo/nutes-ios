@@ -17,20 +17,26 @@ class FirestoreManager {
 
 	var db: Firestore!
 	var currentUser: User!
-	lazy var listener: ListenerRegistration = {
-		let listener = 	db.collection("users").document(currentUser.uid).addSnapshotListener { (document, error) in
-			guard let document = document else {
-				print("Document does not exist")
-				return
-			}
-		}
-		return listener
-	}()
 
 	func configureDB() {
 		let settings = db.settings
 		settings.areTimestampsInSnapshotsEnabled = true
 		db.settings = settings
+	}
+
+	//MARK: - Listeners
+	func addUserListener(uid: String, completion: @escaping (_ data: [String:Any]) -> ()) -> ListenerRegistration {
+		let listener: ListenerRegistration!
+		listener = db.collection("users").document(uid).addSnapshotListener { (document, error) in
+			guard let document = document else {
+				print("Document does not exist")
+				return
+			}
+			if let data = document.data() {
+				completion(data)
+			}
+		}
+		return listener
 	}
 
 	//MARK: - Get a user's info

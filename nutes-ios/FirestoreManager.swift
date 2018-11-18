@@ -158,8 +158,8 @@ class FirestoreManager {
 	}
 
 	//MARK: - Retrieve posts
-	func getPostsForUser(uid: String, completion: @escaping (_ posts:[ListDiffable]?) -> ()) {
-		db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).getDocuments { (documents, error) in
+	func getPostsForUser(uid: String, limit: Int, completion: @escaping (_ posts:[ListDiffable]?) -> ()) {
+		db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).limit(to: limit).getDocuments { (documents, error) in
 			guard error == nil,
 				let documents = documents?.documents else {
 					print(error?.localizedDescription ?? "Error fetching posts!")

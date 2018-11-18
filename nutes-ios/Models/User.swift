@@ -22,7 +22,7 @@ class User {
 
 	convenience init(uid: String, username: String) {
 		self.init(uid: uid)
-		self.username = username
+		self.username = username	
 	}
 }
 

@@ -56,7 +56,7 @@ class FeedViewController: UIViewController {
 			for document in documents {
 				guard let uid = document.data()["followedID"] as? String else {return}
 
-				self.firestore.getPostsForUser(uid: uid, completion: { (posts) in
+				self.firestore.getPostsForUser(uid: uid, limit: 3, completion: { (posts) in
 					guard let posts = posts else {return}
 					for post in posts {
 						self.items.append(post)

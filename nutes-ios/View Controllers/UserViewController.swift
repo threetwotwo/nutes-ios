@@ -114,7 +114,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	@objc fileprivate func loadPosts() {
 		guard let user = user else {return}
 
-		firestore.getPostsForUser(uid: user.uid) { (posts) in
+		firestore.getPostsForUser(uid: user.uid, limit: 18) { (posts) in
 			guard let posts = posts else {return}
 			self.items.removeAll()
 			self.items.append(user)

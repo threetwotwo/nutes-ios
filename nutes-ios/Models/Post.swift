@@ -8,11 +8,12 @@
 
 import Foundation
 import IGListKit
+import FirebaseFirestore
 
 class Post {
 
 	var username = ""
-	var timestamp = String(NSDate().timeIntervalSince1970)
+	var timestamp = ""
 	var image: Data? = nil
 	var imageURL: String? = nil
 

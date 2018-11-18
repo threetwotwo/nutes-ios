@@ -168,6 +168,8 @@ class FirestoreManager {
 			var items = [ListDiffable]()
 			for document in documents {
 				let post = Post()
+				post.username = document.get("username") as! String
+				post.timestamp = String((document.get("timestamp") as! Timestamp).seconds)
 				post.imageURL = document.get("imageURL") as? String
 				items.append(post)
 			}

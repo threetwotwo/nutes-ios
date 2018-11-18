@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */; };
+		4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */; };
 		4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3102195A389009330A7 /* SearchViewController.swift */; };
 		4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */; };
 		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVCSectionController.swift; sourceTree = "<group>"; };
 		4E5DA3102195A389009330A7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserCell.swift; sourceTree = "<group>"; };
 		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */,
 				4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */,
 				4EB89758217F4B44004D6388 /* DetailVCSectionController.swift */,
+				4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */,
 			);
 			path = "Section Controllers";
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
 				4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */,
 				4EB8973F217F48BD004D6388 /* UserViewController.swift in Sources */,
+				4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */,
 				4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */,
 				4EB89748217F4995004D6388 /* User.swift in Sources */,
 				4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */,

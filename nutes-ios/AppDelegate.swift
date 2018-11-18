@@ -34,13 +34,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 		firestore.db = Firestore.firestore()
 		firestore.configureDB()
 			if let user = Auth.auth().currentUser {
+				firestore.currentUser = User(uid: user.uid)
 				print(user.email)
 				let tabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainscreen") as! UITabBarController
 				self.window?.rootViewController = tabBarController
 				self.window?.makeKeyAndVisible()
 				FirestoreManager.shared.getUserInfo(uid: user.uid) { (data) in
 					let username = data["username"] as! String
-					firestore.currentUser = User(uid: user.uid, username: username)
+					firestore.currentUser.username = username
 				}
 
 			}

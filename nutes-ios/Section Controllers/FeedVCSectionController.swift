@@ -1,15 +1,15 @@
 //
-//  DetailVCSectionController.swift
+//  FeedVCSectionController.swift
 //  nutes-ios
 //
-//  Created by Gary on 10/23/18.
+//  Created by Gary on 11/18/18.
 //  Copyright © 2018 Gary. All rights reserved.
 //
 
 import Foundation
 import IGListKit
 
-class DetailVCSectionController: ListSectionController {
+class FeedVCSectionController: ListSectionController {
 	var post: Post?
 
 	override func didUpdate(to object: Any) {
@@ -27,7 +27,7 @@ class DetailVCSectionController: ListSectionController {
 				return UICollectionViewCell()
 		}
 
-		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "NuteBigCell", for: self, at: index) as! DetailVCNuteCell
+		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "FeedPostCell", for: self, at: index) as! DetailVCNuteCell
 		cell.usernameLabel.text = post.username
 		if let imageURL = URL(string: post.imageURL!) {
 			cell.imageView.sd_setImage(with: imageURL)
@@ -37,6 +37,12 @@ class DetailVCSectionController: ListSectionController {
 
 	override func sizeForItem(at index: Int) -> CGSize {
 		guard let frame = collectionContext?.containerSize else { return .zero}
-		return CGSize(width: frame.width, height: frame.height)
+		return CGSize(width: frame.width, height: frame.height/1.5)
+	}
+
+	override func didSelectItem(at index: Int) {
+		let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailVC") as! DetailViewController
+		vc.post = post
+		viewController?.navigationController?.pushViewController(vc, animated: true)
 	}
 }

@@ -16,8 +16,12 @@ class User {
 	var posts: Int! = 0
 	var isFollowing = false
 
-	init(uid: String, username: String) {
+	init(uid: String) {
 		self.uid = uid
+	}
+
+	convenience init(uid: String, username: String) {
+		self.init(uid: uid)
 		self.username = username
 	}
 }

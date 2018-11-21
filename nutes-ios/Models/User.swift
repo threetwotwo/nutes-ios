@@ -29,7 +29,7 @@ class User {
 extension User: ListDiffable {
 
 	func diffIdentifier() -> NSObjectProtocol {
-		return identifier as NSString
+		return identifier + String(posts) as NSString
 	}
 
 	func isEqual(toDiffableObject object: ListDiffable?) -> Bool {

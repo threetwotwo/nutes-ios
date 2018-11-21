@@ -94,6 +94,18 @@ class FirestoreManager {
 		}
 	}
 
+	//MARK: - Get followed users
+	func getFollowedUsers(for uid: String, completion: @escaping ([QueryDocumentSnapshot]) -> ()) {
+		db.collection("relationships").whereField("followerID", isEqualTo: currentUser.uid).getDocuments { (documents, error) in
+			guard error == nil,
+				let documents = documents?.documents else {
+					print(error?.localizedDescription ?? "Error finding followed users")
+					return
+			}
+			completion(documents)
+		}
+	}
+
 	//MARK: - Login/Signup
 	func createUser(withEmail email: String, fullname:String, username: String, password: String, completion: @escaping () -> ()) {
 		Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in

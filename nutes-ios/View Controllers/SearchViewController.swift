@@ -44,7 +44,7 @@ class SearchViewController: UIViewController {
 				print(user.username)
 				self.items.append(user)
 			}
-			self.adapter.reloadData()
+			self.adapter.performUpdates(animated: true)
 		}
     }
 

@@ -45,8 +45,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 	//MARK: - Adapter
 	lazy var adapter: ListAdapter = {
-		let updater = ListAdapterUpdater()
-		let adapter = ListAdapter(updater: updater, viewController: self, workingRangeSize: 1)
+		let adapter = ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 1)
 		adapter.collectionView = collectionView
 		adapter.dataSource = self
 		return adapter
@@ -61,7 +60,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		if user == nil {
 			self.user = firestore.currentUser
 		}
-
+		print(user?.username)
 		title = user?.username
 
 	}
@@ -71,6 +70,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 		//once user is not nill, load header.
 		//load posts once header has finished loading
+		
 		loadHeader {
 			self.loadPosts()
 		}
@@ -100,8 +100,10 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		guard let user = user else {return}
 		listener = firestore.addUserListener(uid: user.uid) { (data) in
 			let posts = data["posts"] as! Int
-			self.user?.posts = posts
+			print(posts)
+			print("User id: \(user.diffIdentifier())")
 
+			self.user?.posts = posts
 			completion()
 		}
 	}
@@ -113,13 +115,15 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 	@objc fileprivate func loadPosts() {
 		guard let user = user else {return}
+		self.items.removeAll()
 
 		firestore.getPostsForUser(uid: user.uid, limit: 18) { (posts) in
 			guard let posts = posts else {return}
-			self.items.removeAll()
 			self.items.append(user)
 			self.items.append(contentsOf: posts)
-			self.adapter.reloadData()
+//			self.adapter.reloadData(completion: nil)
+			print("posts: = \(String(describing: user.posts))")
+			self.adapter.performUpdates(animated: true)
 		}
 	}
 

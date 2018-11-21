@@ -39,20 +39,35 @@ class FeedViewController: UIViewController {
 		return adapter
 	}()
 
+	//MARK: - Pull to refresh
+	lazy var refreshControl: UIRefreshControl = {
+		let refreshControl = UIRefreshControl()
+		refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControl.Event.valueChanged)
+
+		return refreshControl
+	}()
+
+	@objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+			self.adapter.reloadData()
+			refreshControl.endRefreshing()
+		}
+
+	}
+
+
 	//MARK: - Variables
 	var items = [ListDiffable]()
 	var firestore = FirestoreManager.shared
 
+
 	override func viewDidLoad() {
         super.viewDidLoad()
+		self.collectionView.addSubview(self.refreshControl)
+
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		//get user's following
-		firestore.db.collection("relationships").whereField("followerID", isEqualTo: Auth.auth().currentUser?.uid).getDocuments { (documents, error) in
-			guard error == nil,
-				let documents = documents?.documents else {
-				print(error?.localizedDescription ?? "Error finding followed users")
-				return
-			}
+		firestore.getFollowedUsers(for: firestore.currentUser.uid) { (documents) in
 			for document in documents {
 				guard let uid = document.data()["followedID"] as? String else {return}
 

@@ -13,6 +13,7 @@
 		4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */; };
 		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
 		4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */; };
+		4EB201B821A2DBB300007682 /* FeedVCSpinnerSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB201B721A2DBB300007682 /* FeedVCSpinnerSectionController.swift */; };
 		4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89725217F46DA004D6388 /* AppDelegate.swift */; };
 		4EB8972B217F46DA004D6388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89729217F46DA004D6388 /* Main.storyboard */; };
 		4EB8972D217F46DB004D6388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EB8972C217F46DB004D6388 /* Assets.xcassets */; };
@@ -41,6 +42,7 @@
 		4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserCell.swift; sourceTree = "<group>"; };
 		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserSectionController.swift; sourceTree = "<group>"; };
+		4EB201B721A2DBB300007682 /* FeedVCSpinnerSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVCSpinnerSectionController.swift; sourceTree = "<group>"; };
 		4EB89722217F46DA004D6388 /* nutes-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nutes-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB89725217F46DA004D6388 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EB8972A217F46DA004D6388 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */,
 				4EB89758217F4B44004D6388 /* DetailVCSectionController.swift */,
 				4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */,
+				4EB201B721A2DBB300007682 /* FeedVCSpinnerSectionController.swift */,
 			);
 			path = "Section Controllers";
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */,
 				4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */,
 				4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */,
+				4EB201B821A2DBB300007682 /* FeedVCSpinnerSectionController.swift in Sources */,
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
 				4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */,
 				4EB8973F217F48BD004D6388 /* UserViewController.swift in Sources */,

@@ -14,6 +14,7 @@ class UserVCHeaderSectionController: ListSectionController {
 
 	override func didUpdate(to object: Any) {
 		guard let user = object as? User else {return}
+		print("Did update header!")
 		self.user = user
 	}
 	
@@ -33,7 +34,6 @@ class UserVCHeaderSectionController: ListSectionController {
 			let buttonTitle = user.uid == FirestoreManager.shared.currentUser.uid ? "Edit Profile" : (user.isFollowing ? "Unfollow" : "Follow")
 			cell.followButton.setTitle(buttonTitle, for: [])
 		}
-
 		return cell
 	}
 

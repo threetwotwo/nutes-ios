@@ -125,7 +125,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 		super.viewDidLoad()
 		doneButton.isEnabled = true
 
-		textLabel.font = UIFont.systemFont(ofSize: UIScreen.main.bounds.width/13.8, weight: .semibold)
+//		textLabel.font = UIFont.systemFont(ofSize: UIScreen.main.bounds.width/13.8, weight: .semibold)
 		self.textLabel.spellCheckingType = .no
 
 		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: OperationQueue.main) { (notification: Notification) in

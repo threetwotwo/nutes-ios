@@ -23,6 +23,8 @@ class UserVCNuteSectionController: ListSectionController {
 
 	override func didUpdate(to object: Any) {
 		guard let post = object as? Post else {return}
+		print("Did update post!")
+
 		self.post = post
 	}
 

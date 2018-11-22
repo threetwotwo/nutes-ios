@@ -170,8 +170,18 @@ class FirestoreManager {
 	}
 
 	//MARK: - Retrieve posts
-	func getPostsForUser(uid: String, limit: Int, completion: @escaping (_ posts:[ListDiffable]?) -> ()) {
-		db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).limit(to: limit).getDocuments { (documents, error) in
+	func getPostsForUser(uid: String, limit: Int, lastSnapshot: DocumentSnapshot? = nil, completion: @escaping (_ posts:[ListDiffable]?, _ lastSnapshot: DocumentSnapshot?) -> ()) {
+
+		var query: Query!
+
+		//Pagination
+		if lastSnapshot == nil {
+			query = db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).limit(to: limit)
+		} else {
+			query = db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).start(afterDocument: lastSnapshot!).limit(to: limit)
+		}
+
+		query.getDocuments { (documents, error) in
 			guard error == nil,
 				let documents = documents?.documents else {
 					print(error?.localizedDescription ?? "Error fetching posts!")
@@ -185,7 +195,8 @@ class FirestoreManager {
 				post.imageURL = document.get("imageURL") as? String
 				items.append(post)
 			}
-			completion(items)
+			let lastSnapshot = documents.last
+			completion(items, lastSnapshot)
 		}
 	}
 

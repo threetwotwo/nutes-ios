@@ -36,6 +36,7 @@ class FeedViewController: UIViewController {
 		let adapter = ListAdapter(updater: updater, viewController: self, workingRangeSize: 1)
 		adapter.collectionView = collectionView
 		adapter.dataSource = self
+		adapter.scrollViewDelegate = self
 		return adapter
 	}()
 
@@ -57,45 +58,83 @@ class FeedViewController: UIViewController {
 
 
 	//MARK: - Variables
-	var items = [ListDiffable]()
+	lazy var items = [ListDiffable]()
+
 	var firestore = FirestoreManager.shared
+	let spinToken = "spinner"
+	var lastSnapshots = [String:DocumentSnapshot]()
+	var loading = false
 
+	//MARK: - Life cycle
 
-	override func viewDidLoad() {
-        super.viewDidLoad()
-		self.collectionView.addSubview(self.refreshControl)
-
-		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
+	fileprivate func loadPosts() {
 		//get user's following
-		firestore.getFollowedUsers(for: firestore.currentUser.uid) { (documents) in
-			for document in documents {
-				guard let uid = document.data()["followedID"] as? String else {return}
-
-				self.firestore.getPostsForUser(uid: uid, limit: 3, completion: { (posts) in
+		firestore.getFollowedUsers(for: firestore.currentUser.uid) { (relationships) in
+			for relationship in relationships {
+				guard let uid = relationship.data()["followedID"] as? String else {return}
+				self.firestore.getPostsForUser(uid: uid, limit: 3, lastSnapshot: self.lastSnapshots[uid]) { posts, lastSnapshot in
 					guard let posts = posts else {return}
 					for post in posts {
 						self.items.append(post)
 					}
-					self.adapter.reloadData()
-				})
+					if let lastSnapshot = lastSnapshot {
+						self.lastSnapshots[uid] = lastSnapshot
+					}
+					self.adapter.performUpdates(animated: true, completion: nil)
+				}
 			}
 		}
+	}
+
+	override func viewDidLoad() {
+        super.viewDidLoad()
+		self.collectionView.addSubview(self.refreshControl)
+		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
+		loadPosts()
     }
 
 }
 
+//MARK: - List adapter data source
+
 extension FeedViewController: ListAdapterDataSource {
 	func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-		return items
+		var objects = items as [ListDiffable]
+
+		if loading {
+			objects.append(spinToken as ListDiffable)
+		}
+
+		return objects
 	}
 
 	func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
+		if let obj = object as? String, obj == spinToken {
+			return spinnerSectionController()
+		} else {
 		return FeedVCSectionController()
+		}
 	}
 
 	func emptyView(for listAdapter: ListAdapter) -> UIView? {
 		return nil
 	}
 
+}
 
+extension FeedViewController: UIScrollViewDelegate {
+	func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+		let distance = scrollView.contentSize.height - (targetContentOffset.pointee.y + scrollView.bounds.height)
+		if !loading && distance < 200 {
+			loading = true
+			adapter.performUpdates(animated: true, completion: nil)
+			DispatchQueue.global(qos: .default).async {
+				// fake background loading task
+				DispatchQueue.main.async {
+					self.loading = false
+					self.loadPosts()
+				}
+			}
+		}
+	}
 }

@@ -27,7 +27,7 @@ class DetailVCSectionController: ListSectionController {
 				return UICollectionViewCell()
 		}
 
-		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "NuteBigCell", for: self, at: index) as! DetailVCNuteCell
+		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "NuteBigCell", for: self, at: index) as! PostCell
 		cell.usernameLabel.text = post.username
 		if let imageURL = URL(string: post.imageURL!) {
 			cell.imageView.sd_setImage(with: imageURL)

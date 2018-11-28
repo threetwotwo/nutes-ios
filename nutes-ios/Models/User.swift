@@ -12,7 +12,6 @@ import IGListKit
 class User {
 	var uid: String!
 	var username: String!
-	var identifier: String = UUID().uuidString
 	var posts: Int! = 0
 	var isFollowing = false
 
@@ -29,12 +28,13 @@ class User {
 extension User: ListDiffable {
 
 	func diffIdentifier() -> NSObjectProtocol {
-		return identifier + String(posts) as NSString
+		return uid as NSString
 	}
 
 	func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
-		if self === object { return true }
-		return false
+		guard self !== object else { return true }
+		guard let object = object as? User else { return false }
+		return (self.uid) == (object.uid)
 	}
 
 }

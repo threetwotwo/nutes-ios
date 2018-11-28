@@ -24,6 +24,113 @@ class FirestoreManager {
 		db.settings = settings
 	}
 
+	//MARK: - Counter
+	func createCounter(ref: DocumentReference, numShards: Int) {
+		ref.setData(["numShards": numShards]){ (err) in
+			for i in 0...numShards {
+				ref.collection("shards").document(String(i)).setData(["count": 0])
+			}
+		}
+	}
+
+	//check if user liked post
+	func userDidLikePost(user: User, postRef: DocumentReference, completion: @escaping (Bool)->()) {
+		let userRef = postRef.collection("users").document(user.uid)
+		userRef.getDocument { (document, error) in
+			guard error == nil,
+			let didLike = document?.exists else {
+				print(error?.localizedDescription ?? "error checking like")
+				return
+			}
+			completion(didLike)
+		}
+	}
+
+	func incrementCounter(user:User, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
+		// Select a shard of the counter at random
+		let shardId = Int(arc4random_uniform(UInt32(numShards)))
+		let shardRef = ref.collection("shards").document(String(shardId))
+		let userRef = ref.collection("users").document(user.uid)
+
+		var success = false
+
+		// Update count in a transaction
+		db.runTransaction({ (transaction, errorPointer) -> Any? in
+			do {
+
+				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
+				let shardCount = shardData["count"] as! Int
+				transaction.updateData(["count": shardCount + 1], forDocument: shardRef)
+
+				let username = user.username!
+				let timestamp = FieldValue.serverTimestamp()
+				transaction.setData([
+					"username"	: username,
+					"timestamp" : timestamp
+					], forDocument: userRef)
+				
+				success = true
+
+			} catch {
+				// Error getting shard data
+				// ...
+			}
+
+			return success
+		}) { (object, err) in
+			// ...
+			guard let object = object else {return}
+			completion(object as! Bool)
+		}
+	}
+
+	func decrementCounter(user: User, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
+		// Select a shard of the counter at random
+		let shardId = Int(arc4random_uniform(UInt32(numShards)))
+		let shardRef = ref.collection("shards").document(String(shardId))
+		let usersRef = ref.collection("users").document(user.uid)
+
+		var success = false
+
+		// Update count in a transaction
+		db.runTransaction({ (transaction, errorPointer) -> Any? in
+			do {
+				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
+				let shardCount = shardData["count"] as! Int
+				transaction.updateData(["count": shardCount - 1], forDocument: shardRef)
+				usersRef.delete()
+				success = true
+			} catch {
+				// Error getting shard data
+				// ...
+				success = false
+			}
+
+			return nil
+		}) { (object, err) in
+			// ...
+			guard let object = object else {return}
+			completion(object as! Bool)
+		}
+	}
+
+	func getCount(ref: DocumentReference, completion: @escaping (Int) -> ()) {
+		ref.collection("shards").getDocuments() { (querySnapshot, err) in
+			var totalCount = 0
+			if err != nil {
+				// Error getting shards
+				// ...
+			} else {
+				for document in querySnapshot!.documents {
+					let count = document.data()["count"] as! Int
+					totalCount += count
+				}
+			}
+
+			completion(totalCount)
+		}
+	}
+
 	//MARK: - Listeners
 	func addUserListener(uid: String, completion: @escaping (_ data: [String:Any]) -> ()) -> ListenerRegistration {
 		let listener: ListenerRegistration!
@@ -190,8 +297,9 @@ class FirestoreManager {
 			var items = [ListDiffable]()
 			for document in documents {
 				let post = Post()
+				post.id = document.documentID
 				post.username = document.get("username") as! String
-				post.timestamp = String((document.get("timestamp") as! Timestamp).seconds)
+				post.timestamp = (document.get("timestamp") as? Timestamp)?.dateValue()
 				post.imageURL = document.get("imageURL") as? String
 				items.append(post)
 			}

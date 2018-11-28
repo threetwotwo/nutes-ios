@@ -43,11 +43,17 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	var user: User?
 	var listener: ListenerRegistration!
 
+	let spinToken = "spinner"
+	var lastSnapshot: DocumentSnapshot?
+	var loading = false
+	var endOfList = false
+
 	//MARK: - Adapter
 	lazy var adapter: ListAdapter = {
 		let adapter = ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 1)
 		adapter.collectionView = collectionView
 		adapter.dataSource = self
+		adapter.scrollViewDelegate = self
 		return adapter
 	}()
 
@@ -60,6 +66,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		if user == nil {
 			self.user = firestore.currentUser
 		}
+		items.append(user!)
 		print(user?.username)
 		title = user?.username
 
@@ -98,12 +105,13 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	//MARK: - Data fetching
 	@objc fileprivate func loadHeader(completion: @escaping ()->()) {
 		guard let user = user else {return}
+
 		listener = firestore.addUserListener(uid: user.uid) { (data) in
 			let posts = data["posts"] as! Int
 			print(posts)
-			print("User id: \(user.diffIdentifier())")
-
 			self.user?.posts = posts
+			self.items[0] = self.user!
+
 			completion()
 		}
 	}
@@ -115,14 +123,15 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 
 	@objc fileprivate func loadPosts() {
 		guard let user = user else {return}
-		self.items.removeAll()
 
-		firestore.getPostsForUser(uid: user.uid, limit: 18) { posts, lastSnapshot in
+		firestore.getPostsForUser(uid: user.uid, limit: 18, lastSnapshot: self.lastSnapshot) { posts, lastSnapshot in
 			guard let posts = posts else {return}
-			self.items.append(user)
+			
 			self.items.append(contentsOf: posts)
+			if let lastSnapshot = lastSnapshot {
+				self.lastSnapshot = lastSnapshot
+			}
 //			self.adapter.reloadData(completion: nil)
-			print("posts: = \(String(describing: user.posts))")
 			self.adapter.performUpdates(animated: true)
 		}
 	}
@@ -133,10 +142,19 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 extension UserViewController: ListAdapterDataSource {
 
 	func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-		return items
+		var objects = items as [ListDiffable]
+
+		if loading {
+			objects.append(spinToken as ListDiffable)
+		}
+
+		return objects
 	}
 
 	func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
+		if let obj = object as? String, obj == spinToken {
+			return spinnerSectionController()
+		}
 		switch object {
 		case is User:
 			return UserVCHeaderSectionController()
@@ -149,4 +167,20 @@ extension UserViewController: ListAdapterDataSource {
 		return nil
 	}
 
+}
+
+extension UserViewController: UIScrollViewDelegate {
+	func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+		let distance = scrollView.contentSize.height - (targetContentOffset.pointee.y + scrollView.bounds.height)
+		if !loading && distance < 200 {
+			loading = true
+			adapter.performUpdates(animated: true, completion: nil)
+			DispatchQueue.global(qos: .default).async {
+				DispatchQueue.main.async {
+					self.loading = false
+					self.loadPosts()
+				}
+			}
+		}
+	}
 }

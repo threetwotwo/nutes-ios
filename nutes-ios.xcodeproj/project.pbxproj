@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E050CA421AA57B9008A7853 /* Date + time ago display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E050CA321AA57B9008A7853 /* Date + time ago display.swift */; };
 		4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */; };
 		4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */; };
 		4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3102195A389009330A7 /* SearchViewController.swift */; };
@@ -21,7 +22,7 @@
 		4EB89748217F4995004D6388 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89747217F4995004D6388 /* User.swift */; };
 		4EB8974B217F49DF004D6388 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974A217F49DF004D6388 /* Post.swift */; };
 		4EB8974D217F4A5F004D6388 /* NuteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974C217F4A5F004D6388 /* NuteCell.swift */; };
-		4EB89750217F4A84004D6388 /* DetailVCNuteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974F217F4A84004D6388 /* DetailVCNuteCell.swift */; };
+		4EB89750217F4A84004D6388 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974F217F4A84004D6388 /* PostCell.swift */; };
 		4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89751217F4A9B004D6388 /* UserProfileCell.swift */; };
 		4EB89754217F4B00004D6388 /* UserVCNuteSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */; };
 		4EB89757217F4B24004D6388 /* UserVCHeaderSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */; };
@@ -30,12 +31,14 @@
 		4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975C217F4BB6004D6388 /* EditViewController.swift */; };
 		4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975E217F545D004D6388 /* FeedViewController.swift */; };
 		4EB89761217F602C004D6388 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89760217F602C004D6388 /* GoogleService-Info.plist */; };
+		4EBEC47E21A82883004ECD15 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEC47D21A82883004ECD15 /* Counter.swift */; };
 		4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */; };
 		4EEE815921A5992100AC3F46 /* SpinnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEE815821A5992100AC3F46 /* SpinnerCell.swift */; };
 		7445740BE09F8749FBA93579 /* Pods_nutes_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E050CA321AA57B9008A7853 /* Date + time ago display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + time ago display.swift"; sourceTree = "<group>"; };
 		4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVCSectionController.swift; sourceTree = "<group>"; };
 		4E5DA3102195A389009330A7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -52,7 +55,7 @@
 		4EB89747217F4995004D6388 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4EB8974A217F49DF004D6388 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4EB8974C217F4A5F004D6388 /* NuteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteCell.swift; sourceTree = "<group>"; };
-		4EB8974F217F4A84004D6388 /* DetailVCNuteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVCNuteCell.swift; sourceTree = "<group>"; };
+		4EB8974F217F4A84004D6388 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		4EB89751217F4A9B004D6388 /* UserProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileCell.swift; sourceTree = "<group>"; };
 		4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCNuteSectionController.swift; sourceTree = "<group>"; };
 		4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCHeaderSectionController.swift; sourceTree = "<group>"; };
@@ -61,6 +64,7 @@
 		4EB8975C217F4BB6004D6388 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		4EB8975E217F545D004D6388 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		4EB89760217F602C004D6388 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4EBEC47D21A82883004ECD15 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + IBInspectables.swift"; sourceTree = "<group>"; };
 		4EEE815821A5992100AC3F46 /* SpinnerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerCell.swift; sourceTree = "<group>"; };
 		803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nutes_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +156,7 @@
 			children = (
 				4EB89747217F4995004D6388 /* User.swift */,
 				4EB8974A217F49DF004D6388 /* Post.swift */,
+				4EBEC47D21A82883004ECD15 /* Counter.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -160,7 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				4EB8974C217F4A5F004D6388 /* NuteCell.swift */,
-				4EB8974F217F4A84004D6388 /* DetailVCNuteCell.swift */,
+				4EB8974F217F4A84004D6388 /* PostCell.swift */,
 				4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */,
 				4EB89751217F4A9B004D6388 /* UserProfileCell.swift */,
 				4EEE815821A5992100AC3F46 /* SpinnerCell.swift */,
@@ -184,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */,
+				4E050CA321AA57B9008A7853 /* Date + time ago display.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -327,6 +333,7 @@
 			files = (
 				4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */,
 				4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */,
+				4EBEC47E21A82883004ECD15 /* Counter.swift in Sources */,
 				4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */,
 				4EEE815921A5992100AC3F46 /* SpinnerCell.swift in Sources */,
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
@@ -337,10 +344,11 @@
 				4EB89748217F4995004D6388 /* User.swift in Sources */,
 				4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */,
 				4EB8974B217F49DF004D6388 /* Post.swift in Sources */,
-				4EB89750217F4A84004D6388 /* DetailVCNuteCell.swift in Sources */,
+				4EB89750217F4A84004D6388 /* PostCell.swift in Sources */,
 				4EB89759217F4B44004D6388 /* DetailVCSectionController.swift in Sources */,
 				4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */,
 				4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */,
+				4E050CA421AA57B9008A7853 /* Date + time ago display.swift in Sources */,
 				4EB89757217F4B24004D6388 /* UserVCHeaderSectionController.swift in Sources */,
 				4EB89754217F4B00004D6388 /* UserVCNuteSectionController.swift in Sources */,
 				4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */,

@@ -49,8 +49,8 @@ class FeedViewController: UIViewController {
 	}()
 
 	@objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-			self.adapter.reloadData()
+		DispatchQueue.main.asyncAfter(deadline: .now()) {
+			self.viewDidLoad()
 			refreshControl.endRefreshing()
 		}
 
@@ -75,6 +75,7 @@ class FeedViewController: UIViewController {
 				self.firestore.getPostsForUser(uid: uid, limit: 3, lastSnapshot: self.lastSnapshots[uid]) { posts, lastSnapshot in
 					guard let posts = posts else {return}
 					for post in posts {
+
 						self.items.append(post)
 					}
 					if let lastSnapshot = lastSnapshot {

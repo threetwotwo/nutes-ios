@@ -10,7 +10,12 @@ import Foundation
 import IGListKit
 
 class FeedVCSectionController: ListSectionController {
+
 	var post: Post?
+
+	var likesLabel: UILabel!
+
+	var firestore = FirestoreManager.shared
 
 	override func didUpdate(to object: Any) {
 		guard let post = object as? Post else {return}
@@ -27,12 +32,76 @@ class FeedVCSectionController: ListSectionController {
 				return UICollectionViewCell()
 		}
 
-		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "FeedPostCell", for: self, at: index) as! DetailVCNuteCell
+		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "FeedPostCell", for: self, at: index) as! PostCell
+
+		self.likesLabel = cell.likesLabel
+
 		cell.usernameLabel.text = post.username
+
+		let likeCounter = firestore.db.collection("counters").document(post.id)
+
+		firestore.getCount(ref: likeCounter) { (likes) in
+			post.likes = likes
+			cell.likesLabel.text = "\(likes) likes"
+		}
+
 		if let imageURL = URL(string: post.imageURL!) {
 			cell.imageView.sd_setImage(with: imageURL)
 		}
+
+		firestore.userDidLikePost(user: firestore.currentUser, postRef: likeCounter) { (didLike) in
+			let imageName = didLike ? "heart_filled" : "heart_bordered"
+			cell.favoriteButton.setImage(UIImage(named: imageName), for: [])
+			cell.favoriteButton.isEnabled = true
+			post.didLike = didLike
+		}
+		//Since cannot add IBAction, use addTarget instead
+		cell.favoriteButton.addTarget(self, action: #selector(likeButtonPressed(_:)), for: .touchUpInside)
+
+		cell.favoriteButton.tag = index
+
 		return cell
+	}
+
+	@objc func likeButtonPressed(_ button: UIButton) {
+
+		let likeCounter = firestore.db.collection("counters").document((post?.id)!)
+		let currentUser = firestore.currentUser!
+
+		if (post?.didLike)! {
+			button.setImage(UIImage(named: "heart_bordered"), for: [])
+			post?.likes = (post?.likes)! - 1
+			likesLabel?.text = "\(post!.likes!) likes"
+			post?.didLike = false
+			firestore.decrementCounter(user: currentUser, ref: likeCounter, numShards: 10) { (success) in
+				if !success {
+					button.setImage(UIImage(named: "heart_filled"), for: [])
+
+					self.post?.likes = (self.post?.likes)! + 1
+
+					self.likesLabel?.text = "\(self.post!.likes!) likes"
+
+					self.post?.didLike = true
+				}
+			}
+		} else {
+			button.setImage(UIImage(named: "heart_filled"), for: [])
+			post?.likes = (post?.likes)! + 1
+
+			post?.didLike = true
+			likesLabel?.text = "\(self.post!.likes!) likes"
+
+			firestore.incrementCounter(user: currentUser, ref: likeCounter, numShards: 10) { (success) in
+				if !success {
+					self.post?.likes = (self.post?.likes)! - 1
+
+					self.likesLabel?.text = "\(self.post!.likes!) likes"
+
+					button.setImage(UIImage(named: "heart_bordered"), for: [])
+					self.post?.didLike = false
+				}
+			}
+		}
 	}
 
 	override func sizeForItem(at index: Int) -> CGSize {

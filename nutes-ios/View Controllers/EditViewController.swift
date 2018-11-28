@@ -71,6 +71,9 @@ class EditViewController: UIViewController, UITextViewDelegate {
 						print(error?.localizedDescription ?? "Error uploading")
 						return
 					}
+					let counter = FirestoreManager.shared.db.collection("counters").document(postID)
+					FirestoreManager.shared.createCounter(ref: counter, numShards: 10)
+
 					if let url = URL?.absoluteString {
 						let db = FirestoreManager.shared.db
 
@@ -78,7 +81,8 @@ class EditViewController: UIViewController, UITextViewDelegate {
 							"uid" : FirestoreManager.shared.currentUser.uid,
 							"username" : username,
 							"imageURL" : url,
-							"timestamp" : timestamp
+							"timestamp" : timestamp,
+							"likes" : 0
 						]){
 							error in
 							guard error == nil else {

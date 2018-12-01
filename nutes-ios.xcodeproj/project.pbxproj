@@ -10,6 +10,7 @@
 		4E050CA421AA57B9008A7853 /* Date + time ago display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E050CA321AA57B9008A7853 /* Date + time ago display.swift */; };
 		4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */; };
 		4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */; };
+		4E50566721AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */; };
 		4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3102195A389009330A7 /* SearchViewController.swift */; };
 		4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */; };
 		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
@@ -41,6 +42,7 @@
 		4E050CA321AA57B9008A7853 /* Date + time ago display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + time ago display.swift"; sourceTree = "<group>"; };
 		4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVCSectionController.swift; sourceTree = "<group>"; };
+		4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString + bold.swift"; sourceTree = "<group>"; };
 		4E5DA3102195A389009330A7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserCell.swift; sourceTree = "<group>"; };
 		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 			children = (
 				4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */,
 				4E050CA321AA57B9008A7853 /* Date + time ago display.swift */,
+				4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -338,6 +341,7 @@
 				4EEE815921A5992100AC3F46 /* SpinnerCell.swift in Sources */,
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
 				4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */,
+				4E50566721AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift in Sources */,
 				4EB8973F217F48BD004D6388 /* UserViewController.swift in Sources */,
 				4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */,
 				4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */,

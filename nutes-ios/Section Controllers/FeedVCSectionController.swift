@@ -42,7 +42,9 @@ class FeedVCSectionController: ListSectionController {
 
 		firestore.getCount(ref: likeCounter) { (likes) in
 			post.likes = likes
-			cell.likesLabel.text = "\(likes) likes"
+			self.firestore.constructLikesLabel(postID: post.id, likes: likes, completion: { (text) in
+				cell.likesLabel.attributedText = text
+			})
 		}
 
 		if let imageURL = URL(string: post.imageURL!) {
@@ -73,7 +75,7 @@ class FeedVCSectionController: ListSectionController {
 			post?.likes = (post?.likes)! - 1
 			likesLabel?.text = "\(post!.likes!) likes"
 			post?.didLike = false
-			firestore.decrementCounter(user: currentUser, ref: likeCounter, numShards: 10) { (success) in
+			firestore.decrementCounter(user: currentUser, postID: post!.id, ref: likeCounter, numShards: 1) { (success) in
 				if !success {
 					button.setImage(UIImage(named: "heart_filled"), for: [])
 
@@ -91,7 +93,7 @@ class FeedVCSectionController: ListSectionController {
 			post?.didLike = true
 			likesLabel?.text = "\(self.post!.likes!) likes"
 
-			firestore.incrementCounter(user: currentUser, ref: likeCounter, numShards: 10) { (success) in
+			firestore.incrementCounter(user: currentUser, postID: post!.id, ref: likeCounter, numShards: 1) { (success) in
 				if !success {
 					self.post?.likes = (self.post?.likes)! - 1
 

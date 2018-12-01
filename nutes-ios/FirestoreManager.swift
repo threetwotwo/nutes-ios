@@ -17,6 +17,7 @@ class FirestoreManager {
 
 	var db: Firestore!
 	var currentUser: User!
+	let defaults = UserDefaults.standard
 
 	func configureDB() {
 		let settings = db.settings
@@ -28,7 +29,7 @@ class FirestoreManager {
 	func createCounter(ref: DocumentReference, numShards: Int) {
 		ref.setData(["numShards": numShards]){ (err) in
 			for i in 0...numShards {
-				ref.collection("shards").document(String(i)).setData(["count": 0])
+				ref.collection("shards").document(String(i)).setData(["count": 0, "users":[]])
 			}
 		}
 	}
@@ -46,11 +47,13 @@ class FirestoreManager {
 		}
 	}
 
-	func incrementCounter(user:User, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
+	func incrementCounter(user:User, postID: String, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
 		// Select a shard of the counter at random
 		let shardId = Int(arc4random_uniform(UInt32(numShards)))
 		let shardRef = ref.collection("shards").document(String(shardId))
-		let userRef = ref.collection("users").document(user.uid)
+
+		guard let uid = user.uid else {return}
+		let likeRef = db.collection("likes").document("\(postID)_\(uid)")
 
 		var success = false
 
@@ -60,15 +63,20 @@ class FirestoreManager {
 
 				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
 				let shardCount = shardData["count"] as! Int
-				transaction.updateData(["count": shardCount + 1], forDocument: shardRef)
+				transaction.updateData([
+					"count": shardCount + 1
+					], forDocument: shardRef)
 
 				let username = user.username!
 				let timestamp = FieldValue.serverTimestamp()
+
 				transaction.setData([
+					"postID" : postID,
+					"uid" : uid,
 					"username"	: username,
 					"timestamp" : timestamp
-					], forDocument: userRef)
-				
+					], forDocument: likeRef)
+
 				success = true
 
 			} catch {
@@ -84,11 +92,14 @@ class FirestoreManager {
 		}
 	}
 
-	func decrementCounter(user: User, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
+	func decrementCounter(user: User, postID: String, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
 		// Select a shard of the counter at random
 		let shardId = Int(arc4random_uniform(UInt32(numShards)))
 		let shardRef = ref.collection("shards").document(String(shardId))
-		let usersRef = ref.collection("users").document(user.uid)
+
+		guard let uid = user.uid else {return}
+
+		let likeRef = db.collection("likes").document("\(postID)_\(uid)")
 
 		var success = false
 
@@ -98,7 +109,7 @@ class FirestoreManager {
 				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
 				let shardCount = shardData["count"] as! Int
 				transaction.updateData(["count": shardCount - 1], forDocument: shardRef)
-				usersRef.delete()
+				transaction.deleteDocument(likeRef)
 				success = true
 			} catch {
 				// Error getting shard data
@@ -106,7 +117,7 @@ class FirestoreManager {
 				success = false
 			}
 
-			return nil
+			return success
 		}) { (object, err) in
 			// ...
 			guard let object = object else {return}
@@ -117,18 +128,52 @@ class FirestoreManager {
 	func getCount(ref: DocumentReference, completion: @escaping (Int) -> ()) {
 		ref.collection("shards").getDocuments() { (querySnapshot, err) in
 			var totalCount = 0
+			var uids = [String]()
 			if err != nil {
 				// Error getting shards
 				// ...
 			} else {
 				for document in querySnapshot!.documents {
-					let count = document.data()["count"] as! Int
-					totalCount += count
+					if let count = document.data()["count"] as? Int{
+						totalCount += count
+					}
+
+					if let uid = document.data()["users"] as? [String] {
+						uids.append(contentsOf: uid)
+					}
 				}
+				print("uids \(uids)")
 			}
 
 			completion(totalCount)
 		}
+	}
+
+
+	//MARK: - Likes label
+	func constructLikesLabel(postID: String, likes: Int, completion: @escaping (NSMutableAttributedString)->()) {
+		let result = NSMutableAttributedString()
+
+		getFollowedUsers(for: currentUser.uid) { (documents) in
+			var usernames = [String]()
+
+			for document in documents {
+//				let username = document.get("username") as! String
+				let uid = document.get("followedID") as! String
+
+				self.db.collection("likes")
+					.whereField("postID", isEqualTo: postID)
+					.whereField("uid", isEqualTo: uid).getDocuments(completion: { (documents, error) in
+						if let documents = documents,
+							!documents.isEmpty {
+							result.normal("Liked by ").bold(uid)
+							completion(result)
+							return
+						}
+					})
+			}
+		}
+
 	}
 
 	//MARK: - Listeners
@@ -144,6 +189,20 @@ class FirestoreManager {
 			}
 		}
 		return listener
+	}
+
+	//MARK: - Get username from uid
+	func getUsername(fromUID uid: String, completion: @escaping (String)->()) {
+		db.collection("users").document(uid).getDocument { (document, error) in
+			guard let document = document else {
+				print("Document does not exist")
+				return
+			}
+			if let data = document.data(){
+				let username = data["username"] as! String
+				completion(username)
+			}
+		}
 	}
 
 	//MARK: - Get a user's info
@@ -174,11 +233,11 @@ class FirestoreManager {
 
 
 	//MARK: - Follow/Unfollow
-	func followUser(withUID followedID: String, completion: @escaping ()->()) {
-		guard let followerID = self.currentUser.uid else {return}
-		db.collection("relationships").document("\(followerID)_\(followedID)").setData([
-			"followerID" : followerID,
-			"followedID" : followedID,
+	func followUser(withUsername followed: String, completion: @escaping ()->()) {
+		guard let follower = self.currentUser.username else {return}
+		db.collection("relationships").document("\(follower)_\(followed)").setData([
+			"follower" : follower,
+			"followed" : followed,
 			"timestamp" : FieldValue.serverTimestamp()
 		]) { error in
 			if let error = error {
@@ -190,9 +249,9 @@ class FirestoreManager {
 		}
 	}
 
-	func unfollowUser(withUID followedID: String, completion: @escaping ()->()) {
-		guard let followerID = self.currentUser.uid else {return}
-		db.collection("relationships").document("\(followerID)_\(followedID)").delete { (error) in
+	func unfollowUser(withUsername followed: String, completion: @escaping ()->()) {
+		guard let follower = self.currentUser.username else {return}
+		db.collection("relationships").document("\(follower)_\(followed)").delete { (error) in
 			guard error == nil else {
 				print("error deleting document")
 				return
@@ -202,8 +261,8 @@ class FirestoreManager {
 	}
 
 	//MARK: - Get followed users
-	func getFollowedUsers(for uid: String, completion: @escaping ([QueryDocumentSnapshot]) -> ()) {
-		db.collection("relationships").whereField("followerID", isEqualTo: currentUser.uid).getDocuments { (documents, error) in
+	func getFollowedUsers(for username: String, completion: @escaping ([QueryDocumentSnapshot]) -> ()) {
+		db.collection("relationships").whereField("follower", isEqualTo: username).getDocuments { (documents, error) in
 			guard error == nil,
 				let documents = documents?.documents else {
 					print(error?.localizedDescription ?? "Error finding followed users")
@@ -254,6 +313,7 @@ class FirestoreManager {
 				}
 			}
 			self.currentUser = User(uid: uid, username: username)
+			self.defaults.set(username, forKey: "username")
 			completion()
 		}
 	}
@@ -271,21 +331,22 @@ class FirestoreManager {
 					return
 				}
 				self.currentUser = User(uid: uid, username: username)
+				self.defaults.set(username, forKey: "username")
 				completion()
 			}
 		}
 	}
 
 	//MARK: - Retrieve posts
-	func getPostsForUser(uid: String, limit: Int, lastSnapshot: DocumentSnapshot? = nil, completion: @escaping (_ posts:[ListDiffable]?, _ lastSnapshot: DocumentSnapshot?) -> ()) {
+	func getPostsForUser(username: String, limit: Int, lastSnapshot: DocumentSnapshot? = nil, completion: @escaping (_ posts:[ListDiffable]?, _ lastSnapshot: DocumentSnapshot?) -> ()) {
 
 		var query: Query!
 
 		//Pagination
 		if lastSnapshot == nil {
-			query = db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).limit(to: limit)
+			query = db.collection("posts").whereField("username", isEqualTo: username).order(by: "timestamp", descending: true).limit(to: limit)
 		} else {
-			query = db.collection("posts").whereField("uid", isEqualTo: uid).order(by: "timestamp", descending: true).start(afterDocument: lastSnapshot!).limit(to: limit)
+			query = db.collection("posts").whereField("username", isEqualTo: username).order(by: "timestamp", descending: true).start(afterDocument: lastSnapshot!).limit(to: limit)
 		}
 
 		query.getDocuments { (documents, error) in

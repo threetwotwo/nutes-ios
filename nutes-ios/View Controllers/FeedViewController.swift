@@ -69,17 +69,20 @@ class FeedViewController: UIViewController {
 
 	fileprivate func loadPosts() {
 		//get user's following
-		firestore.getFollowedUsers(for: firestore.currentUser.uid) { (relationships) in
+		firestore.getFollowedUsers(for: firestore.currentUser.username) { (relationships) in
 			for relationship in relationships {
-				guard let uid = relationship.data()["followedID"] as? String else {return}
-				self.firestore.getPostsForUser(uid: uid, limit: 3, lastSnapshot: self.lastSnapshots[uid]) { posts, lastSnapshot in
+				print(relationship.documentID)
+				guard let username = relationship.data()["followed"] as? String else {return}
+				print(username)
+				self.firestore.getPostsForUser(username: username, limit: 3, lastSnapshot: self.lastSnapshots[username]) { posts, lastSnapshot in
+					print(posts)
 					guard let posts = posts else {return}
 					for post in posts {
 
 						self.items.append(post)
 					}
 					if let lastSnapshot = lastSnapshot {
-						self.lastSnapshots[uid] = lastSnapshot
+						self.lastSnapshots[username] = lastSnapshot
 					}
 					self.adapter.performUpdates(animated: true, completion: nil)
 				}

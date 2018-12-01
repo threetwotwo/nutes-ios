@@ -22,15 +22,15 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 		print("pressed follow button")
 
 		guard let user = user,
-			let followedID = user.uid else {return}
+			let followed = user.username else {return}
 
 		if user.isFollowing {
-			firestore.unfollowUser(withUID: followedID) {
+			firestore.unfollowUser(withUsername: followed) {
 				self.user?.isFollowing = false
 				self.reloadHeader()
 			}
 		} else {
-			firestore.followUser(withUID: followedID) {
+			firestore.followUser(withUsername: followed) {
 				self.user?.isFollowing = true
 				self.reloadHeader()
 			}
@@ -82,9 +82,9 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 			self.loadPosts()
 		}
 
-		guard let followerID = firestore.currentUser.uid,
-			let followedID = user?.uid else {return}
-		firestore.db.collection("relationships").document("\(followerID)_\(followedID)").getDocument { (document, error) in
+		guard let follower = firestore.currentUser.username,
+			let followed = user?.username else {return}
+		firestore.db.collection("relationships").document("\(follower)_\(followed)").getDocument { (document, error) in
 			guard error == nil else {
 				print(error?.localizedDescription ?? "Error finding document")
 				self.user?.isFollowing = false
@@ -124,7 +124,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	@objc fileprivate func loadPosts() {
 		guard let user = user else {return}
 
-		firestore.getPostsForUser(uid: user.uid, limit: 18, lastSnapshot: self.lastSnapshot) { posts, lastSnapshot in
+		firestore.getPostsForUser(username: user.username, limit: 18, lastSnapshot: self.lastSnapshot) { posts, lastSnapshot in
 			guard let posts = posts else {return}
 			
 			self.items.append(contentsOf: posts)

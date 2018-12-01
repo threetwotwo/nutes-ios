@@ -35,14 +35,17 @@ class FirestoreManager {
 	}
 
 	//check if user liked post
-	func userDidLikePost(user: User, postRef: DocumentReference, completion: @escaping (Bool)->()) {
-		let userRef = postRef.collection("users").document(user.uid)
-		userRef.getDocument { (document, error) in
+	func userDidLikePost(username: String, postID: String, completion: @escaping (Bool)->()) {
+		let userRef = db.collection("likes")
+			.whereField("postID", isEqualTo: postID)
+			.whereField("username", isEqualTo: username)
+		userRef.getDocuments { (documents, error) in
 			guard error == nil,
-			let didLike = document?.exists else {
+				let documents = documents else {
 				print(error?.localizedDescription ?? "error checking like")
 				return
 			}
+			let didLike = !documents.isEmpty 
 			completion(didLike)
 		}
 	}
@@ -52,8 +55,9 @@ class FirestoreManager {
 		let shardId = Int(arc4random_uniform(UInt32(numShards)))
 		let shardRef = ref.collection("shards").document(String(shardId))
 
-		guard let uid = user.uid else {return}
-		let likeRef = db.collection("likes").document("\(postID)_\(uid)")
+		guard let username = user.username,
+			let uid = user.uid else {return}
+		let likeRef = db.collection("likes").document("\(postID)_\(username)")
 
 		var success = false
 
@@ -154,19 +158,19 @@ class FirestoreManager {
 	func constructLikesLabel(postID: String, likes: Int, completion: @escaping (NSMutableAttributedString)->()) {
 		let result = NSMutableAttributedString()
 
-		getFollowedUsers(for: currentUser.uid) { (documents) in
+		getFollowedUsers(for: currentUser.username) { (documents) in
 			var usernames = [String]()
 
 			for document in documents {
 //				let username = document.get("username") as! String
-				let uid = document.get("followedID") as! String
+				let username = document.get("followed") as! String
 
 				self.db.collection("likes")
 					.whereField("postID", isEqualTo: postID)
-					.whereField("uid", isEqualTo: uid).getDocuments(completion: { (documents, error) in
+					.whereField("username", isEqualTo: username).getDocuments(completion: { (documents, error) in
 						if let documents = documents,
 							!documents.isEmpty {
-							result.normal("Liked by ").bold(uid)
+							result.normal("Liked by ").bold(username)
 							completion(result)
 							return
 						}
@@ -362,6 +366,7 @@ class FirestoreManager {
 				post.username = document.get("username") as! String
 				post.timestamp = (document.get("timestamp") as? Timestamp)?.dateValue()
 				post.imageURL = document.get("imageURL") as? String
+				print(post.id)
 				items.append(post)
 			}
 			let lastSnapshot = documents.last

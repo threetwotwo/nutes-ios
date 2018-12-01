@@ -51,7 +51,7 @@ class FeedVCSectionController: ListSectionController {
 			cell.imageView.sd_setImage(with: imageURL)
 		}
 
-		firestore.userDidLikePost(user: firestore.currentUser, postRef: likeCounter) { (didLike) in
+		firestore.userDidLikePost(username: firestore.currentUser.username, postID: post.id) { (didLike) in
 			let imageName = didLike ? "heart_filled" : "heart_bordered"
 			cell.favoriteButton.setImage(UIImage(named: imageName), for: [])
 			cell.favoriteButton.isEnabled = true

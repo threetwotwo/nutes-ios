@@ -18,6 +18,7 @@ class Post {
 	var image: Data? = nil
 	var imageURL: String? = nil
 	var likes: Int?
+	var followedUsernames = [String]()
 	var didLike = false
 }
 

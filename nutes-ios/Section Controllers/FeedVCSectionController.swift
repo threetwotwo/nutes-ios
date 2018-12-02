@@ -46,7 +46,7 @@ class FeedVCSectionController: ListSectionController {
 
 		firestore.getTotalLikes(ref: likeCounter) { (totalLikes) in
 			post.likes = totalLikes
-			self.firestore.getFollowedLikes(postID: post.id, limit: 3, completion: { (followedLikes, usernames) in
+			self.firestore.getFollowedLikes(postID: post.id, limit: 1, completion: { (followedLikes, usernames) in
 
 				self.followedLikes = followedLikes
 				self.followedUsernames = usernames

@@ -155,24 +155,30 @@ class FirestoreManager {
 
 	func getFollowedLikes(postID: String, limit: Int, completion: @escaping (Int, [String]) -> ()) {
 		getFollowedUsers(for: currentUser.username) { (documents) in
-			var usernames = [String]()
 
-			for document in documents {
+			var usernames = [String]()
+			var limitReached = false
+
+			outerLoop: for document in documents {
 				let username = document.get("followed") as! String
+
+				guard !limitReached else {return}
 
 				self.db.collection("likes")
 					.whereField("postID", isEqualTo: postID)
 					.whereField("username", isEqualTo: username).getDocuments(completion: { (documents, error) in
 
 						if let documents = documents,
+							!limitReached,
 							!documents.isEmpty {
 							usernames.append(username)
-						}
+						} 
 
 						if usernames.count == limit {
-							completion(usernames.count, usernames)
-							return
+							print("reached limit \(usernames.count)")
+							limitReached = true
 						}
+
 						completion(usernames.count, usernames)
 					})
 			}

@@ -17,6 +17,10 @@ class FeedVCSectionController: ListSectionController {
 
 	var firestore = FirestoreManager.shared
 
+	var followedLikes = 0
+
+	var followedUsernames = [String]()
+
 	override func didUpdate(to object: Any) {
 		guard let post = object as? Post else {return}
 		self.post = post
@@ -40,10 +44,14 @@ class FeedVCSectionController: ListSectionController {
 
 		let likeCounter = firestore.db.collection("counters").document(post.id)
 
-		firestore.getCount(ref: likeCounter) { (likes) in
-			post.likes = likes
-			self.firestore.constructLikesLabel(postID: post.id, likes: likes, completion: { (text) in
-				cell.likesLabel.attributedText = text
+		firestore.getTotalLikes(ref: likeCounter) { (totalLikes) in
+			post.likes = totalLikes
+			self.firestore.getFollowedLikes(postID: post.id, limit: 3, completion: { (followedLikes, usernames) in
+
+				self.followedLikes = followedLikes
+				self.followedUsernames = usernames
+
+				cell.likesLabel.attributedText =	 self.firestore.constructLikesLabel(totalLikes: totalLikes, followedLikes: followedLikes, followedUsernames: usernames)
 			})
 		}
 
@@ -73,7 +81,7 @@ class FeedVCSectionController: ListSectionController {
 		if (post?.didLike)! {
 			button.setImage(UIImage(named: "heart_bordered"), for: [])
 			post?.likes = (post?.likes)! - 1
-			likesLabel?.text = "\(post!.likes!) likes"
+			likesLabel?.attributedText = firestore.constructLikesLabel(totalLikes: (post?.likes)!, followedLikes: self.followedLikes, followedUsernames: self.followedUsernames)
 			post?.didLike = false
 			firestore.decrementCounter(user: currentUser, postID: post!.id, ref: likeCounter, numShards: 1) { (success) in
 				if !success {
@@ -81,7 +89,7 @@ class FeedVCSectionController: ListSectionController {
 
 					self.post?.likes = (self.post?.likes)! + 1
 
-					self.likesLabel?.text = "\(self.post!.likes!) likes"
+					self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: (self.post?.likes)!, followedLikes: self.followedLikes, followedUsernames: self.followedUsernames)
 
 					self.post?.didLike = true
 				}
@@ -91,14 +99,15 @@ class FeedVCSectionController: ListSectionController {
 			post?.likes = (post?.likes)! + 1
 
 			post?.didLike = true
-			likesLabel?.text = "\(self.post!.likes!) likes"
+
+			self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: (self.post?.likes)!, followedLikes: self.followedLikes, followedUsernames: self.followedUsernames)
 
 			firestore.incrementCounter(user: currentUser, postID: post!.id, ref: likeCounter, numShards: 1) { (success) in
 				if !success {
 					self.post?.likes = (self.post?.likes)! - 1
 
-					self.likesLabel?.text = "\(self.post!.likes!) likes"
-
+					self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: (self.post?.likes)!, followedLikes: self.followedLikes, followedUsernames: self.followedUsernames)
+					
 					button.setImage(UIImage(named: "heart_bordered"), for: [])
 					self.post?.didLike = false
 				}

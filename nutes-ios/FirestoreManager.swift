@@ -129,7 +129,7 @@ class FirestoreManager {
 		}
 	}
 
-	func getCount(ref: DocumentReference, completion: @escaping (Int) -> ()) {
+	func getTotalLikes(ref: DocumentReference, completion: @escaping (Int) -> ()) {
 		ref.collection("shards").getDocuments() { (querySnapshot, err) in
 			var totalCount = 0
 			var uids = [String]()
@@ -153,31 +153,48 @@ class FirestoreManager {
 		}
 	}
 
-
-	//MARK: - Likes label
-	func constructLikesLabel(postID: String, likes: Int, completion: @escaping (NSMutableAttributedString)->()) {
-		let result = NSMutableAttributedString()
-
+	func getFollowedLikes(postID: String, limit: Int, completion: @escaping (Int, [String]) -> ()) {
 		getFollowedUsers(for: currentUser.username) { (documents) in
 			var usernames = [String]()
 
 			for document in documents {
-//				let username = document.get("username") as! String
 				let username = document.get("followed") as! String
 
 				self.db.collection("likes")
 					.whereField("postID", isEqualTo: postID)
 					.whereField("username", isEqualTo: username).getDocuments(completion: { (documents, error) in
+
 						if let documents = documents,
 							!documents.isEmpty {
-							result.normal("Liked by ").bold(username)
-							completion(result)
+							usernames.append(username)
+						}
+
+						if usernames.count == limit {
+							completion(usernames.count, usernames)
 							return
 						}
+						completion(usernames.count, usernames)
 					})
 			}
 		}
+	}
 
+
+	//MARK: - Likes label
+	func constructLikesLabel(totalLikes: Int, followedLikes: Int, followedUsernames: [String]) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		if followedLikes == 0 {
+			return result.bold(String(totalLikes)).normal(" likes")
+		} else {
+			let followedString = followedUsernames.joined(separator: ", ")
+			let othersNumber = totalLikes - followedLikes
+
+			let andString = othersNumber == 0 ? "" : " and "
+			let othersString = othersNumber == 0 ? "" :  "\(othersNumber) others"
+
+			return result.normal("Liked by ").bold(followedString).normal(andString).bold(othersString)
+		}
 	}
 
 	//MARK: - Listeners

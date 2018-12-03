@@ -27,35 +27,35 @@ class DetailVCSectionController: ListSectionController {
 		let likes = post.likes else {return}
 
 		if post.didLike {
-			self.post?.likes = (self.post?.likes)! - 1
+			self.post?.likes = likes - 1
 
 			button.setImage(UIImage(named: "heart_bordered"), for: [])
-			likesLabel?.attributedText = firestore.constructLikesLabel(totalLikes: likes, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
+			likesLabel?.attributedText = firestore.constructLikesLabel(totalLikes: post.likes!, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
 			post.didLike = false
 			firestore.decrementCounter(user: currentUser, postID: post.id, ref: likeCounter, numShards: 1) { (success) in
 				if !success {
 					button.setImage(UIImage(named: "heart_filled"), for: [])
 
-					self.post?.likes = (self.post?.likes)! + 1
+					self.post?.likes = likes + 1
 
-					self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: likes, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
+					self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: post.likes!, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
 
 					self.post?.didLike = true
 				}
 			}
 		} else {
 			button.setImage(UIImage(named: "heart_filled"), for: [])
-			post.likes = (post.likes)! + 1
+			self.post?.likes = likes + 1
 
 			post.didLike = true
 
-			self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: likes, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
+			self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: post.likes!, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
 
 			firestore.incrementCounter(user: currentUser, postID: post.id, ref: likeCounter, numShards: 1) { (success) in
 				if !success {
-					self.post?.likes = (self.post?.likes)! - 1
+					self.post?.likes = likes - 1
 
-					self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: likes, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
+					self.likesLabel?.attributedText =  self.firestore.constructLikesLabel(totalLikes: post.likes!, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
 
 					button.setImage(UIImage(named: "heart_bordered"), for: [])
 					self.post?.didLike = false
@@ -86,18 +86,7 @@ class DetailVCSectionController: ListSectionController {
 
 		cell.usernameLabel.text = post.username
 
-		let likeCounter = firestore.db.collection("counters").document(post.id)
-
-		firestore.getTotalLikes(ref: likeCounter) { (totalLikes) in
-			post.likes = totalLikes
-			self.firestore.getFollowedLikes(postID: post.id, limit: 2, completion: { (followedLikes, usernames) in
-
-				post.likes = followedLikes
-				post.followedUsernames = usernames
-
-				cell.likesLabel.attributedText =	 self.firestore.constructLikesLabel(totalLikes: totalLikes, followedLikes: followedLikes, followedUsernames: usernames)
-			})
-		}
+		cell.likesLabel.attributedText = firestore.constructLikesLabel(totalLikes: post.likes!, followedLikes: post.followedUsernames.count, followedUsernames: post.followedUsernames)
 
 		if let imageURL = URL(string: post.imageURL!) {
 			cell.imageView.sd_setImage(with: imageURL)

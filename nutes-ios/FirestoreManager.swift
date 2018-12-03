@@ -191,13 +191,13 @@ class FirestoreManager {
 		let result = NSMutableAttributedString()
 
 		if followedLikes == 0 {
-			return result.bold(String(totalLikes)).normal(" likes")
+			return result.bold(totalLikes.formattedWithSeparator).normal(" likes")
 		} else {
 			let followedString = followedUsernames.joined(separator: ", ")
 			let othersNumber = totalLikes - followedLikes
 
 			let andString = othersNumber == 0 ? "" : " and "
-			let othersString = othersNumber == 0 ? "" :  "\(othersNumber) others"
+			let othersString = othersNumber == 0 ? "" :  "\(othersNumber.formattedWithSeparator) others"
 
 			return result.normal("Liked by ").bold(followedString).normal(andString).bold(othersString)
 		}

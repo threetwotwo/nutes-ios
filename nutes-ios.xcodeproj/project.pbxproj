@@ -34,6 +34,7 @@
 		4EB89761217F602C004D6388 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89760217F602C004D6388 /* GoogleService-Info.plist */; };
 		4EBEC47E21A82883004ECD15 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEC47D21A82883004ECD15 /* Counter.swift */; };
 		4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */; };
+		4ED6B04921B4EA0D00D40AE4 /* Formatter + Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6B04821B4EA0D00D40AE4 /* Formatter + Int.swift */; };
 		4EEE815921A5992100AC3F46 /* SpinnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEE815821A5992100AC3F46 /* SpinnerCell.swift */; };
 		7445740BE09F8749FBA93579 /* Pods_nutes_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */; };
 /* End PBXBuildFile section */
@@ -68,6 +69,7 @@
 		4EB89760217F602C004D6388 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4EBEC47D21A82883004ECD15 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + IBInspectables.swift"; sourceTree = "<group>"; };
+		4ED6B04821B4EA0D00D40AE4 /* Formatter + Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter + Int.swift"; sourceTree = "<group>"; };
 		4EEE815821A5992100AC3F46 /* SpinnerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerCell.swift; sourceTree = "<group>"; };
 		803C74D04F00218F7F99967B /* Pods_nutes_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nutes_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC46993C00C0D776F0BBF7E4 /* Pods-nutes-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nutes-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-nutes-ios/Pods-nutes-ios.release.xcconfig"; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */,
 				4E050CA321AA57B9008A7853 /* Date + time ago display.swift */,
 				4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */,
+				4ED6B04821B4EA0D00D40AE4 /* Formatter + Int.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -349,6 +352,7 @@
 				4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */,
 				4EB8974B217F49DF004D6388 /* Post.swift in Sources */,
 				4EB89750217F4A84004D6388 /* PostCell.swift in Sources */,
+				4ED6B04921B4EA0D00D40AE4 /* Formatter + Int.swift in Sources */,
 				4EB89759217F4B44004D6388 /* DetailVCSectionController.swift in Sources */,
 				4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */,
 				4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */,

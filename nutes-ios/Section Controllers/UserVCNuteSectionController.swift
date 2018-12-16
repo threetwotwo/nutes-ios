@@ -35,11 +35,9 @@ class UserVCNuteSectionController: ListSectionController {
 
 	override func cellForItem(at index: Int) -> UICollectionViewCell {
 		guard let context = collectionContext,
-			let post = post,
-			let imageURL = URL(string: post.imageURL ?? "") else {
+			let post = post else {
 				return UICollectionViewCell()
 		}
-		print(imageURL)
 
 		let cell = context.dequeueReusableCellFromStoryboard(withIdentifier: "UserProfileNuteCell", for: self, at: index)
 
@@ -47,7 +45,7 @@ class UserVCNuteSectionController: ListSectionController {
 			return cell
 		}
 
-		nuteCell.imageView.sd_setImage(with: imageURL)
+		nuteCell.imageView.sd_setImage(with: post.imageURL)
 		return nuteCell
 	}
 

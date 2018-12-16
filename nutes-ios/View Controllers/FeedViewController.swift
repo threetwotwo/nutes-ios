@@ -74,7 +74,7 @@ class FeedViewController: UIViewController {
 				print(relationship.documentID)
 				guard let username = relationship.data()["followed"] as? String else {return}
 				print(username)
-				self.firestore.getPostsForUser(username: username, limit: 3, lastSnapshot: self.lastSnapshots[username]) { posts, lastSnapshot in
+				self.firestore.getPostsForUser(username: username, limit: 30, lastSnapshot: self.lastSnapshots[username]) { posts, lastSnapshot in
 					guard let posts = posts else {return}
 					for post in posts {
 
@@ -94,8 +94,15 @@ class FeedViewController: UIViewController {
 		self.collectionView.addSubview(self.refreshControl)
 		self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
 		loadPosts()
+		let nc = NotificationCenter.default
+		nc.addObserver(self, selector: #selector(performUpdates), name: Notification.Name("likeButtonPressed"), object: nil)
     }
 
+	@objc func performUpdates() {
+		print("notification for like button!")
+		adapter.performUpdates(animated: true, completion: nil)
+
+	}
 }
 
 //MARK: - List adapter data source
@@ -115,7 +122,7 @@ extension FeedViewController: ListAdapterDataSource {
 		if let obj = object as? String, obj == spinToken {
 			return spinnerSectionController()
 		} else {
-		return FeedVCSectionController()
+		return FeedSectionController()
 		}
 	}
 

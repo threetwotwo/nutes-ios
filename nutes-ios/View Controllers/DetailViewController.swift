@@ -36,7 +36,7 @@ class DetailViewController: UIViewController {
 
 extension DetailViewController: ListAdapterDataSource {
 	func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-		return [post ?? Post()]
+		return [post!]
 	}
 
 	func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {

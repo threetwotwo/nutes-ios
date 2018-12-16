@@ -50,16 +50,15 @@ class FirestoreManager {
 		}
 	}
 
-	func incrementCounter(user:User, postID: String, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
+	func incrementCounter(user:User, postID: String, numShards: Int, completion: @escaping (Bool)->()) {
 		// Select a shard of the counter at random
+		let ref = db.collection("counters").document(postID)
 		let shardId = Int(arc4random_uniform(UInt32(numShards)))
 		let shardRef = ref.collection("shards").document(String(shardId))
 
 		guard let username = user.username,
 			let uid = user.uid else {return}
 		let likeRef = db.collection("likes").document("\(postID)_\(username)")
-
-		var success = false
 
 		// Update count in a transaction
 		db.runTransaction({ (transaction, errorPointer) -> Any? in
@@ -81,31 +80,34 @@ class FirestoreManager {
 					"timestamp" : timestamp
 					], forDocument: likeRef)
 
-				success = true
-
 			} catch {
 				// Error getting shard data
 				// ...
+				print(error.localizedDescription)
 			}
-
-			return success
-		}) { (object, err) in
+			return nil
+		}) { (object, error) in
 			// ...
-			guard let object = object else {return}
-			completion(object as! Bool)
+			if error != nil {
+				print("increased \(0)")
+				completion(false)
+
+			} else {
+				print("increased \(1)")
+				completion(true)
+			}
 		}
 	}
 
-	func decrementCounter(user: User, postID: String, ref: DocumentReference, numShards: Int, completion: @escaping (Bool)->()) {
+	func decrementCounter(user: User, postID: String, numShards: Int, completion: @escaping (Bool)->()) {
 		// Select a shard of the counter at random
+		let ref = db.collection("counters").document(postID)
 		let shardId = Int(arc4random_uniform(UInt32(numShards)))
 		let shardRef = ref.collection("shards").document(String(shardId))
 
-		guard let uid = user.uid else {return}
+		guard let username = user.username else {return}
 
-		let likeRef = db.collection("likes").document("\(postID)_\(uid)")
-
-		var success = false
+		let likeRef = db.collection("likes").document("\(postID)_\(username)")
 
 		// Update count in a transaction
 		db.runTransaction({ (transaction, errorPointer) -> Any? in
@@ -114,18 +116,22 @@ class FirestoreManager {
 				let shardCount = shardData["count"] as! Int
 				transaction.updateData(["count": shardCount - 1], forDocument: shardRef)
 				transaction.deleteDocument(likeRef)
-				success = true
 			} catch {
 				// Error getting shard data
 				// ...
-				success = false
 			}
 
-			return success
-		}) { (object, err) in
+			return nil
+		}) { (object, error) in
 			// ...
-			guard let object = object else {return}
-			completion(object as! Bool)
+			if error != nil {
+				print("decreased \(0)")
+				completion(false)
+
+			} else {
+				print("decreased \(1)")
+				completion(true)
+			}
 		}
 	}
 
@@ -159,10 +165,15 @@ class FirestoreManager {
 			var usernames = [String]()
 			var limitReached = false
 
-			outerLoop: for document in documents {
+			let dsg = DispatchGroup()
+
+			for document in documents {
+				dsg.enter()
+
 				let username = document.get("followed") as! String
 
 				guard !limitReached else {return}
+				let myGroup = DispatchGroup()
 
 				self.db.collection("likes")
 					.whereField("postID", isEqualTo: postID)
@@ -178,10 +189,15 @@ class FirestoreManager {
 							print("reached limit \(usernames.count)")
 							limitReached = true
 						}
-
-						completion(usernames.count, usernames)
+						dsg.leave()
 					})
 			}
+			dsg.notify(queue: .main, execute: {
+				completion(usernames.count, usernames)
+				print("usernames = \(usernames)")
+
+			})
+
 		}
 	}
 
@@ -383,17 +399,55 @@ class FirestoreManager {
 					return
 			}
 			var items = [ListDiffable]()
+			let dispatchGroup = DispatchGroup()
+			
 			for document in documents {
-				let post = Post()
-				post.id = document.documentID
-				post.username = document.get("username") as! String
-				post.timestamp = (document.get("timestamp") as? Timestamp)?.dateValue()
-				post.imageURL = document.get("imageURL") as? String
-				print(post.id)
-				items.append(post)
+				let id = document.documentID
+				let username = document.get("username") as! String
+				let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue()
+				let imageURL = document.get("imageURL") as! String
+
+				var postLikes: Int = 0
+				var followedUsernames = [String]()
+				var userDidLike = false
+
+				dispatchGroup.enter()
+				let likeCounter = self.db.collection("counters").document(id)
+				self.getTotalLikes(ref: likeCounter, completion: { (likes) in
+					postLikes = likes
+					dispatchGroup.leave()
+				})
+
+				dispatchGroup.enter()
+				self.getFollowedLikes(postID: id, limit: 2, completion: { (int, usernames) in
+					followedUsernames = usernames
+					dispatchGroup.leave()
+				})
+
+				dispatchGroup.enter()
+				self.userDidLikePost(username: self.currentUser.username, postID: id, completion: { (didLike) in
+					userDidLike = didLike
+					dispatchGroup.leave()
+				})
+
+				dispatchGroup.notify(queue: .main) {
+					let post = Post(
+						id: id,
+						username: username,
+						timestamp: timestamp!,
+						imageURL: URL(string: imageURL)!,
+						likes: postLikes,
+						followedUsernames: followedUsernames,
+						didLike: userDidLike
+					)
+					items.append(post)
+				}
 			}
-			let lastSnapshot = documents.last
-			completion(items, lastSnapshot)
+			dispatchGroup.notify(queue: .main) {
+
+				let lastSnapshot = documents.last
+				completion(items, lastSnapshot)
+			}
 		}
 	}
 

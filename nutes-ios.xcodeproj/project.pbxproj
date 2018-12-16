@@ -9,10 +9,16 @@
 /* Begin PBXBuildFile section */
 		4E050CA421AA57B9008A7853 /* Date + time ago display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E050CA321AA57B9008A7853 /* Date + time ago display.swift */; };
 		4E09B9DA2191765A00BE03B8 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */; };
-		4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */; };
+		4E10FBF621A177C3007746B0 /* FeedSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E10FBF521A177C3007746B0 /* FeedSectionController.swift */; };
+		4E2EC54221C552090094C55E /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2EC54121C552090094C55E /* UserCell.swift */; };
+		4E2EC54421C5522A0094C55E /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2EC54321C5522A0094C55E /* ActionCell.swift */; };
+		4E31E5BF21C4EE2700522C37 /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E31E5BE21C4EE2700522C37 /* ImageViewModel.swift */; };
+		4E31E5C221C5388F00522C37 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E31E5C121C5388F00522C37 /* UserViewModel.swift */; };
+		4E31E5C421C53B8F00522C37 /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E31E5C321C53B8F00522C37 /* ActionViewModel.swift */; };
 		4E50566721AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */; };
 		4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3102195A389009330A7 /* SearchViewController.swift */; };
 		4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */; };
+		4E80766D21C54977005876B9 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E80766C21C54977005876B9 /* ImageCell.swift */; };
 		4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E979CFD21807FCF009A3DAC /* SignupViewController.swift */; };
 		4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */; };
 		4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89725217F46DA004D6388 /* AppDelegate.swift */; };
@@ -23,7 +29,6 @@
 		4EB89748217F4995004D6388 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89747217F4995004D6388 /* User.swift */; };
 		4EB8974B217F49DF004D6388 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974A217F49DF004D6388 /* Post.swift */; };
 		4EB8974D217F4A5F004D6388 /* NuteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974C217F4A5F004D6388 /* NuteCell.swift */; };
-		4EB89750217F4A84004D6388 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8974F217F4A84004D6388 /* PostCell.swift */; };
 		4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89751217F4A9B004D6388 /* UserProfileCell.swift */; };
 		4EB89754217F4B00004D6388 /* UserVCNuteSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */; };
 		4EB89757217F4B24004D6388 /* UserVCHeaderSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */; };
@@ -33,6 +38,7 @@
 		4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8975E217F545D004D6388 /* FeedViewController.swift */; };
 		4EB89761217F602C004D6388 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EB89760217F602C004D6388 /* GoogleService-Info.plist */; };
 		4EBEC47E21A82883004ECD15 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEC47D21A82883004ECD15 /* Counter.swift */; };
+		4ED1502B21B64C4D0029C2E4 /* ActionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED1502A21B64C4D0029C2E4 /* ActionTimer.swift */; };
 		4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */; };
 		4ED6B04921B4EA0D00D40AE4 /* Formatter + Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6B04821B4EA0D00D40AE4 /* Formatter + Int.swift */; };
 		4EEE815921A5992100AC3F46 /* SpinnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEE815821A5992100AC3F46 /* SpinnerCell.swift */; };
@@ -42,10 +48,16 @@
 /* Begin PBXFileReference section */
 		4E050CA321AA57B9008A7853 /* Date + time ago display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + time ago display.swift"; sourceTree = "<group>"; };
 		4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
-		4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVCSectionController.swift; sourceTree = "<group>"; };
+		4E10FBF521A177C3007746B0 /* FeedSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSectionController.swift; sourceTree = "<group>"; };
+		4E2EC54121C552090094C55E /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		4E2EC54321C5522A0094C55E /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
+		4E31E5BE21C4EE2700522C37 /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
+		4E31E5C121C5388F00522C37 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		4E31E5C321C53B8F00522C37 /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
 		4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString + bold.swift"; sourceTree = "<group>"; };
 		4E5DA3102195A389009330A7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserCell.swift; sourceTree = "<group>"; };
+		4E80766C21C54977005876B9 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		4E979CFD21807FCF009A3DAC /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVCUserSectionController.swift; sourceTree = "<group>"; };
 		4EB89722217F46DA004D6388 /* nutes-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nutes-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,7 +70,6 @@
 		4EB89747217F4995004D6388 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4EB8974A217F49DF004D6388 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4EB8974C217F4A5F004D6388 /* NuteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteCell.swift; sourceTree = "<group>"; };
-		4EB8974F217F4A84004D6388 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		4EB89751217F4A9B004D6388 /* UserProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileCell.swift; sourceTree = "<group>"; };
 		4EB89753217F4B00004D6388 /* UserVCNuteSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCNuteSectionController.swift; sourceTree = "<group>"; };
 		4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCHeaderSectionController.swift; sourceTree = "<group>"; };
@@ -68,6 +79,7 @@
 		4EB8975E217F545D004D6388 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		4EB89760217F602C004D6388 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4EBEC47D21A82883004ECD15 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
+		4ED1502A21B64C4D0029C2E4 /* ActionTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTimer.swift; sourceTree = "<group>"; };
 		4ED3CFBC2190443D00F752FF /* UIView + IBInspectables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + IBInspectables.swift"; sourceTree = "<group>"; };
 		4ED6B04821B4EA0D00D40AE4 /* Formatter + Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter + Int.swift"; sourceTree = "<group>"; };
 		4EEE815821A5992100AC3F46 /* SpinnerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerCell.swift; sourceTree = "<group>"; };
@@ -105,6 +117,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4E31E5C021C4F09700522C37 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				4E31E5C121C5388F00522C37 /* UserViewModel.swift */,
+				4E31E5BE21C4EE2700522C37 /* ImageViewModel.swift */,
+				4E31E5C321C53B8F00522C37 /* ActionViewModel.swift */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
 		4EB89719217F46DA004D6388 = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +152,7 @@
 				4E09B9D92191765A00BE03B8 /* FirestoreManager.swift */,
 				4EB89729217F46DA004D6388 /* Main.storyboard */,
 				4EB89749217F499D004D6388 /* Models */,
+				4E31E5C021C4F09700522C37 /* View Models */,
 				4EB8974E217F4A6C004D6388 /* Views */,
 				4EB89743217F4938004D6388 /* View Controllers */,
 				4EB89755217F4B0C004D6388 /* Section Controllers */,
@@ -169,7 +192,9 @@
 			isa = PBXGroup;
 			children = (
 				4EB8974C217F4A5F004D6388 /* NuteCell.swift */,
-				4EB8974F217F4A84004D6388 /* PostCell.swift */,
+				4E80766C21C54977005876B9 /* ImageCell.swift */,
+				4E2EC54121C552090094C55E /* UserCell.swift */,
+				4E2EC54321C5522A0094C55E /* ActionCell.swift */,
 				4E5DA3122195CD69009330A7 /* SearchVCUserCell.swift */,
 				4EB89751217F4A9B004D6388 /* UserProfileCell.swift */,
 				4EEE815821A5992100AC3F46 /* SpinnerCell.swift */,
@@ -184,7 +209,7 @@
 				4EB89756217F4B24004D6388 /* UserVCHeaderSectionController.swift */,
 				4EAE004821968FCD0098BD4C /* SearchVCUserSectionController.swift */,
 				4EB89758217F4B44004D6388 /* DetailVCSectionController.swift */,
-				4E10FBF521A177C3007746B0 /* FeedVCSectionController.swift */,
+				4E10FBF521A177C3007746B0 /* FeedSectionController.swift */,
 			);
 			path = "Section Controllers";
 			sourceTree = "<group>";
@@ -196,6 +221,7 @@
 				4E050CA321AA57B9008A7853 /* Date + time ago display.swift */,
 				4E50566621AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift */,
 				4ED6B04821B4EA0D00D40AE4 /* Formatter + Int.swift */,
+				4ED1502A21B64C4D0029C2E4 /* ActionTimer.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -340,23 +366,29 @@
 				4E979CFE21807FCF009A3DAC /* SignupViewController.swift in Sources */,
 				4E5DA3132195CD69009330A7 /* SearchVCUserCell.swift in Sources */,
 				4EBEC47E21A82883004ECD15 /* Counter.swift in Sources */,
+				4E31E5BF21C4EE2700522C37 /* ImageViewModel.swift in Sources */,
 				4EB8975B217F4B64004D6388 /* DetailViewController.swift in Sources */,
+				4E31E5C221C5388F00522C37 /* UserViewModel.swift in Sources */,
 				4EEE815921A5992100AC3F46 /* SpinnerCell.swift in Sources */,
 				4EB89726217F46DA004D6388 /* AppDelegate.swift in Sources */,
+				4E2EC54221C552090094C55E /* UserCell.swift in Sources */,
 				4E5DA3112195A389009330A7 /* SearchViewController.swift in Sources */,
 				4E50566721AFC21A003B1CC3 /* NSMutableAttributedString + bold.swift in Sources */,
 				4EB8973F217F48BD004D6388 /* UserViewController.swift in Sources */,
-				4E10FBF621A177C3007746B0 /* FeedVCSectionController.swift in Sources */,
+				4E10FBF621A177C3007746B0 /* FeedSectionController.swift in Sources */,
 				4EB89752217F4A9B004D6388 /* UserProfileCell.swift in Sources */,
 				4EB89748217F4995004D6388 /* User.swift in Sources */,
 				4ED3CFBD2190443D00F752FF /* UIView + IBInspectables.swift in Sources */,
+				4E80766D21C54977005876B9 /* ImageCell.swift in Sources */,
 				4EB8974B217F49DF004D6388 /* Post.swift in Sources */,
-				4EB89750217F4A84004D6388 /* PostCell.swift in Sources */,
+				4ED1502B21B64C4D0029C2E4 /* ActionTimer.swift in Sources */,
 				4ED6B04921B4EA0D00D40AE4 /* Formatter + Int.swift in Sources */,
 				4EB89759217F4B44004D6388 /* DetailVCSectionController.swift in Sources */,
 				4EAE004921968FCD0098BD4C /* SearchVCUserSectionController.swift in Sources */,
 				4EB8975D217F4BB6004D6388 /* EditViewController.swift in Sources */,
 				4E050CA421AA57B9008A7853 /* Date + time ago display.swift in Sources */,
+				4E2EC54421C5522A0094C55E /* ActionCell.swift in Sources */,
+				4E31E5C421C53B8F00522C37 /* ActionViewModel.swift in Sources */,
 				4EB89757217F4B24004D6388 /* UserVCHeaderSectionController.swift in Sources */,
 				4EB89754217F4B00004D6388 /* UserVCNuteSectionController.swift in Sources */,
 				4EB8975F217F545D004D6388 /* FeedViewController.swift in Sources */,

@@ -12,14 +12,23 @@ import FirebaseFirestore
 
 class Post {
 	private var identifier: String = UUID().uuidString
-	var id = ""
-	var username = ""
-	var timestamp: Date?
-	var image: Data? = nil
-	var imageURL: String? = nil
-	var likes: Int?
-	var followedUsernames = [String]()
-	var didLike = false
+	let id: String
+	let username: String
+	let timestamp: Date
+	let imageURL: URL
+	let likes: Int
+	let followedUsernames: [String]
+	let didLike: Bool
+
+	init(id: String, username: String, timestamp: Date, imageURL: URL, likes: Int, followedUsernames: [String], didLike: Bool) {
+		self.id = id
+		self.username = username
+		self.timestamp = timestamp
+		self.imageURL = imageURL
+		self.likes = likes
+		self.followedUsernames = followedUsernames
+		self.didLike = didLike
+	}
 }
 
 extension Post: ListDiffable {

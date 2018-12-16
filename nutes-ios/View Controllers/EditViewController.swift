@@ -72,7 +72,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 						return
 					}
 					let counter = FirestoreManager.shared.db.collection("counters").document(postID)
-					FirestoreManager.shared.createCounter(ref: counter, numShards: 1)
+					FirestoreManager.shared.createCounter(ref: counter, numShards: 10)
 
 					if let url = URL?.absoluteString {
 						let db = FirestoreManager.shared.db

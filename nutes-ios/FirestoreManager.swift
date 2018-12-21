@@ -28,8 +28,8 @@ class FirestoreManager {
 	//MARK: - Counter
 	func createCounter(ref: DocumentReference, numShards: Int) {
 		ref.setData(["numShards": numShards]){ (err) in
-			for i in 0...numShards {
-				ref.collection("shards").document(String(i)).setData(["count": 0, "users":[]])
+			for i in 0..<numShards {
+				ref.collection("shards").document(String(i)).setData(["count": 0])
 			}
 		}
 	}
@@ -135,6 +135,43 @@ class FirestoreManager {
 		}
 	}
 
+	func incrementCommentLikeCounter(username: String, postID: String, commentID: String) {
+
+		let counterID = "\(postID)_\(commentID)"
+		let ref = db.collection("counters").document(counterID)
+
+		let shardId = Int(arc4random_uniform(UInt32(10)))
+		let shardRef = ref.collection("shards").document(String(shardId))
+
+		let likeID = "\(counterID)_\(username)"
+		let likeRef = db.collection("likes").document(likeID)
+
+		db.runTransaction({ (transaction, errorPointer) -> Any? in
+			do {
+				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
+				let shardCount = shardData["count"] as! Int
+				transaction.updateData(["count": shardCount - 1], forDocument: shardRef)
+
+				let timestamp = FieldValue.serverTimestamp()
+
+				transaction.setData([
+					"postID" : postID,
+					"commentID" : commentID,
+					"username"	: username,
+					"timestamp" : timestamp
+					], forDocument: likeRef)
+			}  catch let error as NSError {
+				errorPointer?.pointee = error
+			}
+			return nil
+		}) { (object, error) in
+			// ...
+			if error != nil {
+				print(error?.localizedDescription)
+			}
+		}
+	}
+
 	func getTotalLikes(ref: DocumentReference, completion: @escaping (Int) -> ()) {
 		ref.collection("shards").getDocuments() { (querySnapshot, err) in
 			var totalCount = 0
@@ -173,7 +210,6 @@ class FirestoreManager {
 				let username = document.get("followed") as! String
 
 				guard !limitReached else {return}
-				let myGroup = DispatchGroup()
 
 				self.db.collection("likes")
 					.whereField("postID", isEqualTo: postID)
@@ -201,21 +237,96 @@ class FirestoreManager {
 		}
 	}
 
+	//MARK: - Comments
+	//if parentID is nil then it is a root comment, if not then it's a reply
+	func createComment(postID: String, username: String, text: String, parentID: String? = nil) {
+		let timestamp = FieldValue.serverTimestamp()
+		let commentID = "\(postID)_\(username)\(Timestamp().seconds)"
+		let shardsRef = db.collection("counters").document(commentID).collection("shards")
+		let commentRef = db.collection("comments").document(commentID)
 
-	//MARK: - Likes label
-	func constructLikesLabel(totalLikes: Int, followedLikes: Int, followedUsernames: [String]) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		db.runTransaction({ (transaction, errorPointer) -> Any? in
+			do {
+				//create counter with 10 shards
+				for i in 0..<10 {
+					transaction.setData(["count" : 0], forDocument: shardsRef.document(String(i)))
+					transaction.setData([
+						"postID" : postID,
+						"parentID" : parentID,
+						"username" : username,
+						"text" : text,
+						"timestamp" : timestamp
+						], forDocument: commentRef)
+				}
+			} catch let error as NSError {
+				errorPointer?.pointee = error
+			}
+			return nil
+		}) { (object, error) in
+			// ...
+			if error != nil {
+				print(error?.localizedDescription)
+			}
+		}
+	}
 
-		if followedLikes == 0 {
-			return result.bold(totalLikes.formattedWithSeparator).normal(" likes")
-		} else {
-			let followedString = followedUsernames.joined(separator: ", ")
-			let othersNumber = totalLikes - followedLikes
+	func getReplies(commentID: String, completion: @escaping ([Comment]) -> ()) {
+		db.collection("comments")
+			.whereField("parentID", isEqualTo: commentID)
+			.getDocuments { (snapshot, error) in
+				guard error == nil else {
+					return
+				}
+				var comments = [Comment]()
+				if let documents = snapshot?.documents {
+					for document in documents {
+						let data = document.data()
+						let parentID = data["parentID"] as? String
+						let postID = data["postID"] as! String
+						let username = data["username"] as! String
+						let text = data["text"] as! String
+						let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
+						let comment = Comment(parentID: parentID, commentID: document.documentID, postID: postID, username: username, text: text, likes: 1, timestamp: timestamp ?? Date())
+						comments.append(comment)
+					}
+					completion(comments)
+				}
+		}
+	}
 
-			let andString = othersNumber == 0 ? "" : " and "
-			let othersString = othersNumber == 0 ? "" :  "\(othersNumber.formattedWithSeparator) others"
+	func getComments(postID: String, completion: @escaping ([Comment])->()) {
+		print("postID: \(postID)")
+		let dsg = DispatchGroup()
 
-			return result.normal("Liked by ").bold(followedString).normal(andString).bold(othersString)
+		db.collection("comments")
+			.whereField("postID", isEqualTo: postID)
+			.whereField("parentID", isEqualTo: NSNull())
+			.getDocuments { (snapshot, error) in
+			guard error == nil else {
+				return
+			}
+			var comments = [Comment]()
+			if let documents = snapshot?.documents {
+
+				for document in documents {
+
+					let data = document.data()
+					let postID = data["postID"] as! String
+					let username = data["username"] as! String
+					let text = data["text"] as! String
+					let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
+					let comment = Comment(parentID: nil, commentID: document.documentID, postID: postID, username: username, text: text, likes: 1, timestamp: timestamp ?? Date())
+					dsg.enter()
+					self.getReplies(commentID: document.documentID, completion: { (replies) in
+						comments.append(comment)
+						comments.append(contentsOf: replies)
+						dsg.leave()
+					})
+				}
+				dsg.notify(queue: .main, execute: {
+					completion(comments)
+				})
+			}
 		}
 	}
 
@@ -410,6 +521,7 @@ class FirestoreManager {
 				var postLikes: Int = 0
 				var followedUsernames = [String]()
 				var userDidLike = false
+				var postComments = [Comment]()
 
 				dispatchGroup.enter()
 				let likeCounter = self.db.collection("counters").document(id)
@@ -430,6 +542,12 @@ class FirestoreManager {
 					dispatchGroup.leave()
 				})
 
+				dispatchGroup.enter()
+				self.getComments(postID: id, completion: { (comments) in
+					postComments = comments
+					dispatchGroup.leave()
+				})
+
 				dispatchGroup.notify(queue: .main) {
 					let post = Post(
 						id: id,
@@ -438,7 +556,8 @@ class FirestoreManager {
 						imageURL: URL(string: imageURL)!,
 						likes: postLikes,
 						followedUsernames: followedUsernames,
-						didLike: userDidLike
+						didLike: userDidLike,
+						comments: postComments
 					)
 					items.append(post)
 				}

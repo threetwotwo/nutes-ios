@@ -23,7 +23,6 @@ class FeedViewController: UIViewController {
 			print("User logged out!")
 			let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SignUpVC") as! SignupViewController
 			self.present(vc, animated: true, completion: nil)
-//			self.tabBarController?.dismiss(animated: true, completion: nil)
 
 		} catch {
 			print("Unable to logout")

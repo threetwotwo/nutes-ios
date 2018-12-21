@@ -19,8 +19,9 @@ class Post {
 	let likes: Int
 	let followedUsernames: [String]
 	let didLike: Bool
+	let comments: [Comment]
 
-	init(id: String, username: String, timestamp: Date, imageURL: URL, likes: Int, followedUsernames: [String], didLike: Bool) {
+	init(id: String, username: String, timestamp: Date, imageURL: URL, likes: Int, followedUsernames: [String], didLike: Bool, comments: [Comment]) {
 		self.id = id
 		self.username = username
 		self.timestamp = timestamp
@@ -28,6 +29,7 @@ class Post {
 		self.likes = likes
 		self.followedUsernames = followedUsernames
 		self.didLike = didLike
+		self.comments = comments
 	}
 }
 

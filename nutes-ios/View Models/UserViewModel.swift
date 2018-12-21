@@ -10,11 +10,12 @@ import Foundation
 import IGListKit
 
 class UserViewModel: ListDiffable {
-
+	let postID: String
 	let username: String
 	let timestamp: Date
 
-	init(username: String, timestamp: Date) {
+	init(postID: String, username: String, timestamp: Date) {
+		self.postID = postID
 		self.username = username
 		self.timestamp = timestamp
 	}

@@ -20,6 +20,8 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 
 	@IBAction func cancelReplyButton(_ sender: Any) {
 		replyingToView.isHidden = true
+		commentTextField.text = ""
+		replyIndex = nil
 		parentID = nil
 	}
 
@@ -46,7 +48,7 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 		self.adapter.performUpdates(animated: true)
 		commentTextField.delegate = self
 		NotificationCenter.default.addObserver(self,
-											   selector: #selector(showKeyboard(_:)),
+											   selector: #selector(keyboardNotification(_:)),
 											   name: UIResponder.keyboardWillChangeFrameNotification,
 											   object: nil)
     }
@@ -64,7 +66,7 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 
-	@objc func keyboardNotification(notification: NSNotification) {
+	@objc func keyboardNotification(_ notification: NSNotification) {
 		if let userInfo = notification.userInfo {
 			let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
 			let endFrameY = endFrame?.origin.y ?? 0
@@ -72,10 +74,13 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 			let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
 			let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
 			let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
+			guard let barHeight = tabBarController?.tabBar.frame.height else {
+					return
+			}
 			if endFrameY >= UIScreen.main.bounds.size.height {
 				self.commentTextFieldBottomConstraint?.constant = 0.0
 			} else {
-				self.commentTextFieldBottomConstraint?.constant = (endFrame?.size.height) ?? 0.0
+				self.commentTextFieldBottomConstraint?.constant = (endFrame?.size.height ?? 0.0) - barHeight
 			}
 			if notification.name == UIResponder.keyboardWillHideNotification {
 				collectionView.contentInset = UIEdgeInsets.zero
@@ -83,7 +88,7 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 				collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: endFrame!.height, right: 0)
 			}
 			UIView.animate(withDuration: duration,
-						   delay: TimeInterval(0),
+						   delay: TimeInterval(0.10),
 						   options: animationCurve,
 						   animations: { self.view.layoutIfNeeded() },
 						   completion: nil)

@@ -28,6 +28,7 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 	var items: [ListDiffable] = []
 	var firestore = FirestoreManager.shared
 	var parentID: String?
+	var replyIndex: Int?
 
 	//MARK: - Adapter
 	lazy var adapter: ListAdapter = {
@@ -45,19 +46,20 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 		self.adapter.performUpdates(animated: true)
 		commentTextField.delegate = self
 		NotificationCenter.default.addObserver(self,
-											   selector: #selector(self.keyboardNotification(notification:)),
+											   selector: #selector(showKeyboard(_:)),
 											   name: UIResponder.keyboardWillChangeFrameNotification,
 											   object: nil)
     }
 
 	//MARK: - Keyboard
-	fileprivate func showKeyboard(_ notification: (Notification)) {
+	@objc fileprivate func showKeyboard(_ notification: (Notification)) {
 
 		UIView.animate(withDuration: 0.3) {
 			guard let userInfo = notification.userInfo,
 				let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue) else {return}
 			let frame = keyboardSize.cgRectValue
-			self.commentTextFieldBottomConstraint.constant = frame.height - 64
+			self.commentTextFieldBottomConstraint.constant = frame.height
+
 			self.view.layoutIfNeeded()
 		}
 	}
@@ -102,7 +104,13 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 			firestore.createComment(postID: postID, username: firestore.currentUser.username, text: textField.text!)
 		}
 
-		items.append(comment)
+		if let index = replyIndex {
+			items.insert(comment, at: items.index(after: index))
+		} else {
+			items.append(comment)
+		}
+
+		replyIndex = nil
 
 		adapter.performUpdates(animated: true, completion: nil)
 		self.parentID = nil

@@ -248,7 +248,8 @@ class FirestoreManager {
 		db.runTransaction({ (transaction, errorPointer) -> Any? in
 			do {
 				//create counter with 10 shards
-				for i in 0..<10 {
+				transaction.setData(["numShards": 2], forDocument: self.db.collection("counters").document(commentID))
+				for i in 0..<2 {
 					transaction.setData(["count" : 0], forDocument: shardsRef.document(String(i)))
 					transaction.setData([
 						"postID" : postID,
@@ -270,9 +271,10 @@ class FirestoreManager {
 		}
 	}
 
-	func getReplies(commentID: String, completion: @escaping ([Comment]) -> ()) {
+	func getReplies(commentID: String, limit: Int, completion: @escaping ([Comment]) -> ()) {
 		db.collection("comments")
 			.whereField("parentID", isEqualTo: commentID)
+			.limit(to: limit)
 			.getDocuments { (snapshot, error) in
 				guard error == nil else {
 					return
@@ -294,13 +296,14 @@ class FirestoreManager {
 		}
 	}
 
-	func getComments(postID: String, completion: @escaping ([Comment])->()) {
+	func getComments(postID: String, limit: Int, completion: @escaping ([Comment])->()) {
 		print("postID: \(postID)")
 		let dsg = DispatchGroup()
 
 		db.collection("comments")
 			.whereField("postID", isEqualTo: postID)
 			.whereField("parentID", isEqualTo: NSNull())
+			.limit(to: limit)
 			.getDocuments { (snapshot, error) in
 			guard error == nil else {
 				return
@@ -317,7 +320,7 @@ class FirestoreManager {
 					let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
 					let comment = Comment(parentID: nil, commentID: document.documentID, postID: postID, username: username, text: text, likes: 1, timestamp: timestamp ?? Date())
 					dsg.enter()
-					self.getReplies(commentID: document.documentID, completion: { (replies) in
+					self.getReplies(commentID: document.documentID, limit: 20, completion: { (replies) in
 						comments.append(comment)
 						comments.append(contentsOf: replies)
 						dsg.leave()
@@ -543,7 +546,7 @@ class FirestoreManager {
 				})
 
 				dispatchGroup.enter()
-				self.getComments(postID: id, completion: { (comments) in
+				self.getComments(postID: id, limit: 20, completion: { (comments) in
 					postComments = comments
 					dispatchGroup.leave()
 				})

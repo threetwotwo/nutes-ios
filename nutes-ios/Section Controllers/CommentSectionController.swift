@@ -25,15 +25,17 @@ CommentActionCellDelegate {
 		guard let vc = viewController as? CommentViewController,
 		let commentTextField = vc.commentTextField else {return}
 		vc.parentID = comment?.parentID == nil ? comment.commentID : comment.parentID
-		//Toggle keyboard
-		if commentTextField.isFirstResponder {
+		let index = vc.collectionView.indexPath(for: cell)?.section
+		//Toggle keyboard by hiding keyboard when the same reply button is pressed twice
+		if commentTextField.isFirstResponder && vc.replyIndex == index {
 			commentTextField.resignFirstResponder()
 			vc.replyingToView.isHidden = true
 		} else {
+			vc.replyIndex = index
 			commentTextField.becomeFirstResponder()
 			vc.replyingToView.isHidden = false
 			let indexPath = vc.collectionView.indexPath(for: cell)
-
+			vc.commentTextField.text = "@\(comment.username) "
 			vc.collectionView.scrollToItem(at: indexPath!, at: .bottom, animated: true)
 		}
 		vc.replyingToLabel.text = "Replying to: \(comment.username)"
@@ -62,9 +64,11 @@ CommentActionCellDelegate {
 
 		switch viewModel {
 		case is ActionViewModel:
-			identifier = "commentaction"
+			identifier = comment.parentID == nil ? "commentaction" : "commentreplyaction"
+		case is CommentViewModel:
+			identifier = comment.parentID == nil ? "commentcomment" : "commentreply"
 		default:
-			identifier = "commentcomment"
+			identifier = "null"
 		}
 
 		guard let cell = collectionContext?
@@ -73,15 +77,6 @@ CommentActionCellDelegate {
 
 		if let cell = cell as? CommentActionCell {
 			cell.delegate = self
-			if comment.parentID != nil {
-				cell.leadingConstraint.constant = 50
-			}
-		}
-
-		if let cell = cell as? CommentVCCell {
-			if comment.parentID != nil {
-				cell.leadingConstraint.constant = 50
-			}
 		}
 		
 		return cell as! UICollectionViewCell & ListBindable

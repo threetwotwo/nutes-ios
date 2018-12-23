@@ -434,6 +434,51 @@
                                             <outlet property="replyButton" destination="qlY-96-FBI" id="JSE-hH-jT0"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="commentreplyaction" id="ax1-JL-uW0" customClass="CommentActionCell" customModule="nutes_ios" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="180" width="375" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqD-jM-B1M">
+                                                    <rect key="frame" x="197" y="17" width="33" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s8y-9g-wTh">
+                                                    <rect key="frame" x="116" y="10.5" width="36" height="29"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <state key="normal" title="Reply">
+                                                        <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G6s-MM-5sd">
+                                                    <rect key="frame" x="168" y="12.5" width="25" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="LaL-gU-wcs"/>
+                                                        <constraint firstAttribute="width" constant="25" id="xfU-Jd-M6J"/>
+                                                    </constraints>
+                                                    <state key="normal" image="heart_bordered"/>
+                                                </button>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="G6s-MM-5sd" firstAttribute="centerY" secondItem="ax1-JL-uW0" secondAttribute="centerY" id="2NA-4e-dT4"/>
+                                            <constraint firstItem="cqD-jM-B1M" firstAttribute="leading" secondItem="G6s-MM-5sd" secondAttribute="trailing" constant="4" id="AS8-WV-kKR"/>
+                                            <constraint firstItem="s8y-9g-wTh" firstAttribute="centerY" secondItem="ax1-JL-uW0" secondAttribute="centerY" id="Dsy-ea-AgL"/>
+                                            <constraint firstItem="cqD-jM-B1M" firstAttribute="centerY" secondItem="ax1-JL-uW0" secondAttribute="centerY" id="EMu-sI-3SA"/>
+                                            <constraint firstItem="G6s-MM-5sd" firstAttribute="leading" secondItem="s8y-9g-wTh" secondAttribute="trailing" constant="16" id="gpm-hR-RPz"/>
+                                            <constraint firstItem="s8y-9g-wTh" firstAttribute="leading" secondItem="ax1-JL-uW0" secondAttribute="leading" constant="116" id="szt-PM-MJK"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="leadingConstraint" destination="szt-PM-MJK" id="v8e-o0-KvC"/>
+                                            <outlet property="likeButton" destination="G6s-MM-5sd" id="kfF-SQ-pOs"/>
+                                            <outlet property="likesLabel" destination="cqD-jM-B1M" id="o2f-C3-24G"/>
+                                            <outlet property="replyButton" destination="s8y-9g-wTh" id="QMV-9y-kh7"/>
+                                        </connections>
+                                    </collectionViewCell>
                                 </cells>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DA5-bq-bQQ">

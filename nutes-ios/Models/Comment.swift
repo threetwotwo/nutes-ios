@@ -19,8 +19,9 @@ final class Comment: ListDiffable {
 	let text: String
 	let timestamp: Date
 	let likes: Int
+	let didLike: Bool
 
-	init(parentID: String?, commentID: String, postID: String, username: String, text: String, likes: Int, timestamp: Date) {
+	init(parentID: String?, commentID: String, postID: String, username: String, text: String, likes: Int, timestamp: Date, didLike: Bool) {
 		self.parentID = parentID 
 		self.commentID = commentID
 		self.postID = postID
@@ -28,6 +29,7 @@ final class Comment: ListDiffable {
 		self.text = text
 		self.likes = likes
 		self.timestamp = timestamp
+		self.didLike = didLike
 	}
 
 	func diffIdentifier() -> NSObjectProtocol {

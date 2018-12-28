@@ -10,6 +10,8 @@ import UIKit
 import IGListKit
 import Firebase
 
+
+
 class CommentViewController: UIViewController, UITextFieldDelegate {
 	//MARK: - IBOutlets
 	@IBOutlet weak var collectionView: UICollectionView!
@@ -18,11 +20,21 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 	@IBOutlet weak var replyingToView: UIView!
 	@IBOutlet weak var replyingToLabel: UILabel!
 
-	@IBAction func cancelReplyButton(_ sender: Any) {
+	func adjustUITextViewHeight(arg : UITextField)
+	{
+		arg.translatesAutoresizingMaskIntoConstraints = true
+		arg.sizeToFit()
+	}
+
+	fileprivate func resetCommentTextField() {
 		replyingToView.isHidden = true
 		commentTextField.text = ""
 		replyIndex = nil
 		parentID = nil
+	}
+
+	@IBAction func cancelReplyButton(_ sender: Any) {
+		resetCommentTextField()
 	}
 
 	//MARK: - Variables
@@ -30,6 +42,7 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 	var items: [ListDiffable] = []
 	var firestore = FirestoreManager.shared
 	var parentID: String?
+	//Section number
 	var replyIndex: Int?
 
 	//MARK: - Adapter
@@ -102,10 +115,10 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 		let commentID = "\(postID ?? "")_\(firestore.currentUser.username ?? "")\(Timestamp().seconds)"
 
 		if parentID != nil {
-			comment = Comment(parentID: parentID, commentID: commentID, postID: postID, username: firestore.currentUser.username, text: textField.text!, likes: 1, timestamp: Date())
+			comment = Comment(parentID: parentID, commentID: commentID, postID: postID, username: firestore.currentUser.username, text: textField.text!, likes: 0, timestamp: Date(), didLike: false)
 			firestore.createComment(postID: postID, username: firestore.currentUser.username, text: textField.text!, parentID: parentID)
 		} else {
-			comment = Comment(parentID: nil, commentID: commentID, postID: postID, username: firestore.currentUser.username, text: textField.text!, likes: 1, timestamp: Date())
+			comment = Comment(parentID: nil, commentID: commentID, postID: postID, username: firestore.currentUser.username, text: textField.text!, likes: 0, timestamp: Date(), didLike: false)
 			firestore.createComment(postID: postID, username: firestore.currentUser.username, text: textField.text!)
 		}
 
@@ -113,16 +126,21 @@ class CommentViewController: UIViewController, UITextFieldDelegate {
 			items.insert(comment, at: items.index(after: index))
 		} else {
 			items.append(comment)
+			if collectionView.numberOfSections > 0 {
+				let lastSectionIndex = collectionView.numberOfSections - 1 // last section
+				let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1 // last row
+				collectionView.scrollToItem(at: IndexPath(row: lastRowIndex, section: lastSectionIndex), at: .bottom, animated: true)
+			}
 		}
 
 		replyIndex = nil
 
 		adapter.performUpdates(animated: true, completion: nil)
-		self.parentID = nil
 		textField.resignFirstResponder()
-		replyingToView.isHidden = true
+		resetCommentTextField()
 		return true
 	}
+
 }
 
 extension CommentViewController: ListAdapterDataSource {

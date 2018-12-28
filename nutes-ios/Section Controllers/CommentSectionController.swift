@@ -16,8 +16,26 @@ CommentActionCellDelegate {
 	var postID: String = ""
 	let firestore = FirestoreManager.shared
 	var comment: Comment!
+	var localLikes: Int? = nil
+	var didLike: Bool? = nil
 
 	func didTapHeart(cell: CommentActionCell) {
+
+		self.didLike = !self.didLike!
+
+		let image = self.didLike! ? "heart_filled" : "heart_bordered"
+
+		cell.likeButton.setImage(UIImage(named: image), for: [])
+
+		if didLike! {
+			localLikes = (localLikes ?? object?.likes ?? 0) + 1
+			firestore.incrementCommentLikeCounter(postID: postID, commentID: comment.commentID)
+		} else {
+			localLikes = (localLikes ?? object?.likes ?? 0) - 1
+			firestore.decrementCommentLikeCounter(postID: postID, commentID: comment.commentID)
+		}
+
+		cell.likesLabel.text = "\(localLikes!)"
 
 	}
 
@@ -37,6 +55,7 @@ CommentActionCellDelegate {
 			let indexPath = vc.collectionView.indexPath(for: cell)
 			vc.commentTextField.text = "@\(comment.username) "
 			vc.collectionView.scrollToItem(at: indexPath!, at: .bottom, animated: true)
+			
 		}
 		vc.replyingToLabel.text = "Replying to: \(comment.username)"
 	}
@@ -54,7 +73,7 @@ CommentActionCellDelegate {
 		comment = object
 		let results: [ListDiffable] = [
 			CommentViewModel(username: object.username, text: object.text, timestamp: object.timestamp),
-			ActionViewModel(likes: object.likes, followedUsernames: [], didLike: false)
+			ActionViewModel(likes: object.likes, followedUsernames: [], didLike: object.didLike)
 		]
 		return results
 	}
@@ -77,6 +96,7 @@ CommentActionCellDelegate {
 
 		if let cell = cell as? CommentActionCell {
 			cell.delegate = self
+			self.didLike = (viewModel as! ActionViewModel).didLike
 		}
 		
 		return cell as! UICollectionViewCell & ListBindable
@@ -91,7 +111,11 @@ CommentActionCellDelegate {
 		case is ActionViewModel:
 			height = 40
 		default:
-			height = 50
+			let leadingConstraint: CGFloat = comment.parentID == nil ? 0 : 58
+			//width of label
+			let commentWidth = width - 100 - leadingConstraint
+			let commentHeight = textHeight(text: comment.text, width: commentWidth)
+			height = commentHeight < 50 ? 50 : commentHeight
 		}
 		return CGSize(width: width, height: height)
 	}

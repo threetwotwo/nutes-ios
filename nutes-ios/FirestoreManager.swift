@@ -57,7 +57,7 @@ class FirestoreManager {
 		let shardRef = ref.collection("shards").document(String(shardId))
 
 		guard let username = user.username,
-			let uid = user.uid else {return}
+			let uid = user.uid else { return }
 		let likeRef = db.collection("likes").document("\(postID)_\(username)")
 
 		// Update count in a transaction
@@ -135,22 +135,41 @@ class FirestoreManager {
 		}
 	}
 
-	func incrementCommentLikeCounter(username: String, postID: String, commentID: String) {
+	func userDidLikeComment(postID: String, commentID: String,  completion: @escaping (Bool)->()) {
+		let username = currentUser.username!
+		let likeID = "\(commentID)_\(username)"
+		let likeRef = db.collection("likes").document(likeID)
 
+		likeRef.getDocument { (snapshot, error) in
+			guard error == nil, let didLike = snapshot?.exists else {
+				print(error?.localizedDescription ?? "")
+				return
+			}
+
+			completion(didLike)
+		}
+	}
+
+	func incrementCommentLikeCounter(postID: String, commentID: String) {
+		let username = currentUser.username!
 		let counterID = "\(postID)_\(commentID)"
-		let ref = db.collection("counters").document(counterID)
-
-		let shardId = Int(arc4random_uniform(UInt32(10)))
+		let ref = db.collection("counters").document(commentID)
+		print(ref.documentID)
+		let shardId = Int.random(in: 0..<1)
 		let shardRef = ref.collection("shards").document(String(shardId))
 
-		let likeID = "\(counterID)_\(username)"
+		let likeID = "\(commentID)_\(username)"
+		print(likeID)
 		let likeRef = db.collection("likes").document(likeID)
 
 		db.runTransaction({ (transaction, errorPointer) -> Any? in
 			do {
-				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
-				let shardCount = shardData["count"] as! Int
-				transaction.updateData(["count": shardCount - 1], forDocument: shardRef)
+//				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
+//				let shardCount = shardData["count"] as! Int
+//				transaction.updateData(["count": shardCount + 1], forDocument: shardRef)
+//
+				let shardCount = try transaction.getDocument(shardRef).get("count") as! Int
+							transaction.updateData(["count": shardCount + 1], forDocument: shardRef)
 
 				let timestamp = FieldValue.serverTimestamp()
 
@@ -172,10 +191,42 @@ class FirestoreManager {
 		}
 	}
 
+	func decrementCommentLikeCounter(postID: String, commentID: String) {
+		let username = currentUser.username!
+		let counterID = "\(postID)_\(commentID)"
+		let ref = db.collection("counters").document(commentID)
+
+		let shardId = Int(arc4random_uniform(UInt32(1)))
+		let shardRef = ref.collection("shards").document(String(shardId))
+
+		let likeID = "\(commentID)_\(username)"
+		let likeRef = db.collection("likes").document(likeID)
+
+		db.runTransaction({ (transaction, errorPointer) -> Any? in
+			do {
+				let shardData = try transaction.getDocument(shardRef).data() ?? [:]
+				let shardCount = shardData["count"] as! Int
+				transaction.updateData(["count": shardCount - 1], forDocument: shardRef)
+
+
+				transaction.deleteDocument(likeRef)
+
+			}  catch let error as NSError {
+				errorPointer?.pointee = error
+			}
+			return nil
+			
+		}) { (object, error) in
+			// ...
+			if error != nil {
+				print(error?.localizedDescription ?? "")
+			}
+		}
+	}
+
 	func getTotalLikes(ref: DocumentReference, completion: @escaping (Int) -> ()) {
 		ref.collection("shards").getDocuments() { (querySnapshot, err) in
 			var totalCount = 0
-			var uids = [String]()
 			if err != nil {
 				// Error getting shards
 				// ...
@@ -184,14 +235,8 @@ class FirestoreManager {
 					if let count = document.data()["count"] as? Int{
 						totalCount += count
 					}
-
-					if let uid = document.data()["users"] as? [String] {
-						uids.append(contentsOf: uid)
-					}
 				}
-				print("uids \(uids)")
 			}
-
 			completion(totalCount)
 		}
 	}
@@ -276,38 +321,66 @@ class FirestoreManager {
 			.whereField("parentID", isEqualTo: commentID)
 			.limit(to: limit)
 			.getDocuments { (snapshot, error) in
+
 				guard error == nil else {
 					return
 				}
+
+				let dsg = DispatchGroup()
+
 				var comments = [Comment]()
 				if let documents = snapshot?.documents {
+
 					for document in documents {
+
 						let data = document.data()
 						let parentID = data["parentID"] as? String
 						let postID = data["postID"] as! String
 						let username = data["username"] as! String
 						let text = data["text"] as! String
 						let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
-						let comment = Comment(parentID: parentID, commentID: document.documentID, postID: postID, username: username, text: text, likes: 1, timestamp: timestamp ?? Date())
-						comments.append(comment)
+						let shardsRef = self.db.collection("counters").document(document.documentID)
+
+						var commentLikes: Int = 0
+						var commentDidLike = false
+
+						dsg.enter()
+						self.getTotalLikes(ref: shardsRef, completion: { (likes) in
+							commentLikes = likes
+							dsg.leave()
+						})
+
+						dsg.enter()
+						self.userDidLikeComment(postID: postID, commentID: document.documentID, completion: { (didLike) in
+							commentDidLike = didLike
+							dsg.leave()
+						})
+
+						dsg.notify(queue: .main, execute: {
+							let comment = Comment(parentID: parentID, commentID: document.documentID, postID: postID, username: username, text: text, likes: commentLikes, timestamp: timestamp ?? Date(), didLike: commentDidLike)
+							comments.append(comment)
+						})
 					}
-					completion(comments)
+					dsg.notify(queue: .main, execute: {
+						completion(comments)
+					})
 				}
 		}
 	}
 
 	func getComments(postID: String, limit: Int, completion: @escaping ([Comment])->()) {
-		print("postID: \(postID)")
-		let dsg = DispatchGroup()
-
 		db.collection("comments")
 			.whereField("postID", isEqualTo: postID)
 			.whereField("parentID", isEqualTo: NSNull())
 			.limit(to: limit)
 			.getDocuments { (snapshot, error) in
+
 			guard error == nil else {
 				return
 			}
+
+			let dsg = DispatchGroup()
+
 			var comments = [Comment]()
 			if let documents = snapshot?.documents {
 
@@ -318,12 +391,36 @@ class FirestoreManager {
 					let username = data["username"] as! String
 					let text = data["text"] as! String
 					let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
-					let comment = Comment(parentID: nil, commentID: document.documentID, postID: postID, username: username, text: text, likes: 1, timestamp: timestamp ?? Date())
+					let commentID = document.documentID
+					let shardsRef = self.db.collection("counters").document(commentID)
+					print("getcomments = \(commentID)")
+
+					var commentLikes: Int = 0
+					var commentReplies = [Comment]()
+					var commentDidLike = false
+
 					dsg.enter()
 					self.getReplies(commentID: document.documentID, limit: 20, completion: { (replies) in
-						comments.append(comment)
-						comments.append(contentsOf: replies)
+						commentReplies = replies
 						dsg.leave()
+					})
+
+					dsg.enter()
+					self.getTotalLikes(ref: shardsRef, completion: { (likes) in
+						commentLikes = likes
+						dsg.leave()
+					})
+
+					dsg.enter()
+					self.userDidLikeComment(postID: postID, commentID: commentID, completion: { (didLike) in
+						commentDidLike = didLike
+						dsg.leave()
+					})
+
+					dsg.notify(queue: .main, execute: {
+						let comment = Comment(parentID: nil, commentID: commentID, postID: postID, username: username, text: text, likes: commentLikes, timestamp: timestamp ?? Date(), didLike: commentDidLike)
+						comments.append(comment)
+						comments.append(contentsOf: commentReplies)
 					})
 				}
 				dsg.notify(queue: .main, execute: {

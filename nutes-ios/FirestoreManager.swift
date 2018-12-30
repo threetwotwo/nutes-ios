@@ -199,7 +199,7 @@ class FirestoreManager {
 		let shardId = Int(arc4random_uniform(UInt32(1)))
 		let shardRef = ref.collection("shards").document(String(shardId))
 
-		let likeID = "\(commentID)_\(username)"
+		let likeID = "\(commentID	)_\(username)"
 		let likeRef = db.collection("likes").document(likeID)
 
 		db.runTransaction({ (transaction, errorPointer) -> Any? in

@@ -106,7 +106,7 @@ class UserViewController: UIViewController, UICollectionViewDelegate {
 	@objc fileprivate func loadHeader(completion: @escaping ()->()) {
 		guard let user = user else {return}
 
-		listener = firestore.addUserListener(uid: user.uid) { (data) in
+		listener = firestore.addUserListener(username: user.username) { (data) in
 			let posts = data["posts"] as! Int
 			print(posts)
 			self.user?.posts = posts

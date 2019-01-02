@@ -71,8 +71,8 @@ class EditViewController: UIViewController, UITextViewDelegate {
 						print(error?.localizedDescription ?? "Error uploading")
 						return
 					}
-					let counter = FirestoreManager.shared.db.collection("counters").document(postID)
-					FirestoreManager.shared.createCounter(ref: counter, numShards: 10)
+					let counter = FirestoreManager.shared.db.collection("postLikesCounters").document(postID)
+					FirestoreManager.shared.createPostLikesCounter(ref: counter, numShards: 1)
 
 					if let url = URL?.absoluteString {
 						let db = FirestoreManager.shared.db
@@ -95,8 +95,7 @@ class EditViewController: UIViewController, UITextViewDelegate {
 							//notifies the app that a post has been uploaded to cloud storage
 //							NotificationCenter.default.post(name: NSNotification.Name(rawValue: "postuploadsuccess"), object: nil)
 							//increment user's post count
-							guard let userID = Auth.auth().currentUser?.uid else {return}
-							let user = db!.collection("users").document(userID)
+							let user = db!.collection("users").document(username)
 							user.getDocument { (document, error) in
 								guard let document = document,
 									let postCount = document.get("posts") as? Int else {

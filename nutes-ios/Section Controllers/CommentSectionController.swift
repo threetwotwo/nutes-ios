@@ -29,10 +29,10 @@ CommentActionCellDelegate {
 
 		if didLike! {
 			localLikes = (localLikes ?? object?.likes ?? 0) + 1
-			firestore.incrementCommentLikeCounter(postID: postID, commentID: comment.commentID)
+			firestore.incrementCommentLikesCounter(postID: postID, commentID: comment.commentID)
 		} else {
 			localLikes = (localLikes ?? object?.likes ?? 0) - 1
-			firestore.decrementCommentLikeCounter(postID: postID, commentID: comment.commentID)
+			firestore.decrementCommentLikesCounter(postID: postID, commentID: comment.commentID)
 		}
 
 		cell.likesLabel.text = "\(localLikes!)"
